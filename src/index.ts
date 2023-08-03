@@ -5,33 +5,45 @@ import saveRecords from "./functions/saveRecords";
 
 const fs = require('fs');
 
-const filepaths: string[] = [
+const files: string[] = [
     "testingexcel/Hoste Data 28.07.2023.xlsx",
     "testingexcel/LEAVE DATA.xlsx",
     "testingexcel/Raw Record Report_2023_07_21-2023_07_21.xlsx"
 ]
 
 
-const main = async () => {
+interface MainParams {
+    updateMaster?: boolean,
+    updateLeave?: boolean,
+    filepaths?: string[]
+}
+
+
+// Add a filepaths array to store the filepaths of the excel files to the named parameters. Also put explicit typing.
+const main = async ({updateMaster = false, updateLeave = false, filepaths = files}: MainParams): Promise<void> => {
+    // Initial Checks for database and logs folder
     if (!fs.existsSync("database")) fs.mkdirSync("database");
     if (!fs.existsSync("logs")) fs.mkdirSync("logs");
-    if (!fs.existsSync("database/master.json")) await processMasterDatabase(filepaths[0])
-    if (!fs.existsSync("database/leave.json")) await processLeaveDatabase(filepaths[1])
-    const masterDatabase: MasterData = JSON.parse(fs.readFileSync("database/master.json", "utf-8"));
 
-    // TODO: FIX THIS LEAVEDATABASE in JSON does not work... (#FIX THIS)
+    // If database/master.json and database/leave.json does not exist, create them
+    if (updateMaster && !fs.existsSync("database/master.json")) await processMasterDatabase(filepaths[0])
+    if (updateLeave && !fs.existsSync("database/leave.json")) await processLeaveDatabase(filepaths[1])
+
+    // Read the database/master.json and database/leave.json
+    const masterDatabase: MasterData = JSON.parse(fs.readFileSync("database/master.json", "utf-8"));
+    const masterRegNos: Set<string> = new Set(Object.keys(masterDatabase))
     const leaveDatabase: Set<string> = new Set(JSON.parse(fs.readFileSync("database/leave.json", "utf-8")));
-    // console.log(leaveDatabase)
+
+    // Process the turnstile data
     const [date, turnstileDatabase]: [string, TurnstileData] = await processTurnstyleData(filepaths[2])
-    // @ts-ignore
-    const data = {masterDatabase, date, turnstileDatabase, leaveDatabase}
-    const masterRegNos = new Set(Object.keys(masterDatabase))
+
+    // onLeave and isNewEntry are not set in processTurnstyleData, so we set them here
     for (const regNo of Object.keys(turnstileDatabase)) {
-        if (!masterRegNos.has(regNo))
-            turnstileDatabase[regNo].isNewEntry = true;
-        if (leaveDatabase.has(regNo))
-            turnstileDatabase[regNo].isOnLeave = true;
+        turnstileDatabase[regNo].isNewEntry = !masterRegNos.has(regNo);
+        turnstileDatabase[regNo].isOnLeave = leaveDatabase.has(regNo);
     }
+
+
     for (const regNo of Object.keys(turnstileDatabase)) {
         const studentData = turnstileDatabase[regNo];
         if (studentData) {
@@ -42,8 +54,6 @@ const main = async () => {
             if (studentData.isNewEntry) studentData.status = `NE_${studentData.status}`;
         }
     }
-    // for (const regNo of Object.keys(turnstileDatabase)) console.log(`{ "${regNo}": ${JSON.stringify(turnstileDatabase[regNo])} },`)
     await saveRecords(date, turnstileDatabase)
 }
-
-main().then().catch(console.error)
+main({}).then().catch(console.error)
