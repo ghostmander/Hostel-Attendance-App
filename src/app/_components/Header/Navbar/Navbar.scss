@@ -1,0 +1,116 @@
+@import url("/app/globals.css");
+
+#navbar {
+  label {
+    .menu {
+      position: absolute;
+      right: -100px;
+      top: -100px;
+      z-index: 100;
+      width: 200px;
+      height: 200px;
+      background: var(--accent-color);
+      border-radius: 50% 50% 50% 50%;
+      -webkit-transition: 0.5s ease-in-out;
+      transition: 0.5s ease-in-out;
+      box-shadow: 0 0 0 0 var(--accent-color), 0 0 0 0 var(--accent-color);
+      cursor: pointer;
+    }
+
+    .hamburger {
+      position: absolute;
+      top: 135px;
+      left: 50px;
+      width: 30px;
+      height: 2px;
+      background: var(--dark-text);
+      display: block;
+      -webkit-transform-origin: center;
+      transform-origin: center;
+      -webkit-transition: 0.5s ease-in-out;
+      transition: 0.5s ease-in-out;
+
+      &:after, &:before {
+        -webkit-transition: 0.5s ease-in-out;
+        transition: 0.5s ease-in-out;
+        content: "";
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: var(--dark-text);
+      }
+
+      &:after {
+        bottom: -10px;
+      }
+
+      &:before {
+        top: -10px;
+      }
+    }
+
+    input {
+      display: none;
+
+      &:checked + .menu {
+        box-shadow: 0 0 0 100vw var(--accent-color), 0 0 0 100vh var(--accent-color);
+        border-radius: 0;
+
+        .hamburger {
+          -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+
+          &:before, &:after {
+            -webkit-transform: rotate(90deg);
+            transform: rotate(90deg);
+          }
+
+          &:after {
+            bottom: 0;
+          }
+
+          &:before {
+            top: 0;
+          }
+        }
+
+        + ul {
+          opacity: 1;
+          z-index: 200 !important;
+        }
+      }
+    }
+
+    ul {
+      z-index: -10;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      -webkit-transition: 0.25s 0s ease-in-out;
+      transition: 0.25s 0s ease-in-out;
+      list-style-type: none;
+    }
+
+    a {
+      margin-bottom: 1em;
+      display: block;
+      font-family: "akzidenz-grotesk-black", sans-serif;
+      color: var(--primary-bg);
+      text-decoration: none;
+      transition: all 0.2s ease-in-out;
+      width: 100%;
+      padding: 1em 7em;
+      font-size: xx-large;
+      text-align: center;
+
+      &:hover {
+        scale: 1.2;
+        transition: all 0.2s ease-in-out;
+      }
+    }
+  }
+}

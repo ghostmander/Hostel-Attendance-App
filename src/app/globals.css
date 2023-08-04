@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --primary-bg: #e8e8e8;
+    --secondary-bg: #d3cef8;
+    --primary-color: #3c3c3c;
+    --secondary-color: #d9d9d9;
+    --accent-color: #737373;
+    --primary-border: #ccc;
+    --secondary-border: #bbb;
+    --white: #e8e8e8;
+    --black: #0a0a0a;
+
+    --dark-text: #fafafa;
+    --dark-background: #050505;
+    --dark-primary: #a3a3a3;
+    --dark-secondary: #1a1a1a;
+}
+/**
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-bg: #e8e8e8;
+        --secondary-bg: #d3cef8;
+        --primary-color: #3c3c3c;
+        --secondary-color: #d9d9d9;
+        --accent-color: #737373;
+        --primary-border: #ccc;
+        --secondary-border: #bbb;
+        --white: #e8e8e8;
+        --black: #0a0a0a;
+
+        --dark-text: #fafafa;
+        --dark-background: #050505;
+        --dark-primary: #a3a3a3;
+        --dark-secondary: #1a1a1a;
+        --dark-accent: #b3b3b3;
+    }
+}
+/**/
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "akzidenz-grotesk", sans-serif;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+@font-face {
+    font-family: "akzidenz-grotesk-black";
+    src: url("_fonts/Akzidenz-grotesk-bold.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "akzidenz-grotesk-bold";
+    src: url("_fonts/Akzidenz-grotesk-bold.ttf");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "akzidenz-grotesk-light";
+    src: url("_fonts/Akzidenz-grotesk-light.ttf");
+    font-weight: normal;
+    font-style: light;
+}
+
+@font-face {
+    font-family: "akzidenz-grotesk-roman";
+    src: url("_fonts/Akzidenz-grotesk-roman.ttf");
+    font-weight: roman;
+    font-style: normal;
+}

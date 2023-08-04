@@ -1,0 +1,39 @@
+@import url("/app/globals.css");
+
+
+#header {
+  background-color: var(--secondary-color);
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--primary-border);
+  display: flex;
+  justify-content: space-between;
+  height: 10vh;
+
+
+  #header-left, #header-right {
+    width: 20%;
+    display: flex;
+
+    img {
+      height: 90%;
+      margin: auto 0 auto 1rem;
+    }
+  }
+
+  #header-center {
+    width: 60%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+
+    p {
+      color: var(--primary-color);
+      font-family: akzidenz-grotesk-black, sans-serif;
+      font-size: 1.5rem;
+      padding: 0;
+      margin: 0;
+    }
+  }
+}
