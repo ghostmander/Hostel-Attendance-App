@@ -1,18 +1,10 @@
-import type {Metadata} from 'next'
 import React from "react";
+// import SecondHeader from "../_components/SecondHeader";
 
-
-export const metadata: Metadata = {
-    title: 'Hostel Attendance App',
-    description: 'Made with ❤️ by Mewtkursh',
-}
-
-export default function ReportLayout({children}: {
-    children: React.ReactNode
-}) {
+export default function ReportLayout({children}: { children: React.ReactNode }) {
     return (
-        <div>
-            <h1>Report</h1>
+        <div id={"main-content"}>
+            {/*<SecondHeader title={"View Attendance Report: "} needButton={true} />*/}
             {children}
         </div>
     )

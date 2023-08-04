@@ -1,8 +1,14 @@
 import React from 'react';
+import SecondHeader from "../_components/SecondHeader";
+import Filters from "./_components/Filters";
 
 export default function Report() {
     return (
-        <div id={"main-content"} />
+        <div id={"main-content"}>
+            <SecondHeader title={"View Attendance Report: "} needButton={true} />
+            <Filters isDateNeeded={false} />
+
+        </div>
     )
 }
 

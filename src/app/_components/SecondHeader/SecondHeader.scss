@@ -1,0 +1,15 @@
+@import url("/src/app/globals.css");
+
+#title {
+  background-color: var(--primary-bg);
+  color: var(--primary-color);
+  border-bottom: 1px solid var(--primary-border);
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  padding: 1rem 0;
+  font-family: "akzidenz-grotesk-roman", sans-serif;
+  margin: 0 0 2rem;
+}
