@@ -1,9 +1,13 @@
 import {Row, Workbook} from "exceljs";
 import * as fs from "fs";
+import {ReadableWebToNodeStream} from "readable-web-to-node-stream";
 
-const processMasterDatabase = async (filepath: string): Promise<MasterData> => {
+
+const processMasterDatabase = async (file: File): Promise<MasterData> => {
     const workbook: Workbook = new Workbook();
-    return await workbook.xlsx.readFile(filepath).then(() => {
+    const filestream = new ReadableWebToNodeStream(file.stream())
+    // @ts-ignore
+    return await workbook.xlsx.read(filestream).then(() => {
         let data: MasterData = {};
         const getUpperCell = (row: Row, col: number): string => row.getCell(col).toString().toUpperCase().trim();
         workbook.eachSheet((worksheet) => {
@@ -28,5 +32,6 @@ const processMasterDatabase = async (filepath: string): Promise<MasterData> => {
         return data;
     });
 }
+
 
 export default processMasterDatabase;

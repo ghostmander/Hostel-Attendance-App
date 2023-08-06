@@ -38,7 +38,8 @@
       {
         "name": "next"
       }
-    ]
+    ],
+
   },
   "exclude": [
     "node_modules"
@@ -46,6 +47,6 @@
   "include": [
     "./src/**/*.ts",
     "./src/**/*.tsx",
-    ".next/types/**/*.ts",
+    ".next/types/**/*.ts"
   ]
 }

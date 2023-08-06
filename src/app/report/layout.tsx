@@ -3,8 +3,7 @@ import React from "react";
 
 export default function ReportLayout({children}: { children: React.ReactNode }) {
     return (
-        <div id={"main-content"}>
-            {/*<SecondHeader title={"View Attendance Report: "} needButton={true} />*/}
+        <div id={"main-content-top"}>
             {children}
         </div>
     )

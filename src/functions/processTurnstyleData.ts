@@ -1,8 +1,11 @@
 import {Workbook, Row} from "exceljs";
+import {ReadableWebToNodeStream} from "readable-web-to-node-stream";
 
-const processTurnstyleData = async (filepath: string): Promise<[string, TurnstileData]> => {
+const processTurnstyleData = async (file: File): Promise<[string, TurnstileData]> => {
     const workbook: Workbook = new Workbook();
-    return await workbook.xlsx.readFile(filepath).then(() => {
+    const filestream = new ReadableWebToNodeStream(file.stream())
+    // @ts-ignore
+    return await workbook.xlsx.read(filestream).then(() => {
         // WORKSHEET 1 - Turnstile Data is on Sheet1.
         const worksheet = workbook.getWorksheet(1);
 

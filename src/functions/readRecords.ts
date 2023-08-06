@@ -1,7 +1,7 @@
-import fs from 'fs';
+const fs = require("fs");
 
-const readRecords = (date: string): TurnstileData => {
-    if (!fs.existsSync(`logs/${date}.json`)) return {}
+const readRecords = (date: string): TurnstileData | undefined => {
+    if (!fs.existsSync(`logs/${date}.json`)) return undefined;
     return JSON.parse(fs.readFileSync(`logs/${date}.json`, "utf-8"));
 }
 
