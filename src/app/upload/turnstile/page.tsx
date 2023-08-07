@@ -1,9 +1,8 @@
 import React from 'react';
 import SecondHeader from "src/app/_components/SecondHeader";
 import UploadFiles from "../_components/UploadFiles/UploadFiles";
-import processTurnstyleData from "src/functions/processTurnstyleData";
 
-export default function TurnstileUpload() {
+export default async function TurnstileUpload() {
     return (
         <div id={"main-content"} style={{
             color: 'var(--primary-color)',
@@ -19,7 +18,7 @@ export default function TurnstileUpload() {
                 necessary data fields for the Turnstile data processing to be
                 successful.
             </p>
-            <UploadFiles fileFn={processTurnstyleData} />
+            <UploadFiles fileType={"turnstile"} />
         </div>
     )
 }

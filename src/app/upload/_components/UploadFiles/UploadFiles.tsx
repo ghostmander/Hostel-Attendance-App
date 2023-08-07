@@ -1,25 +1,42 @@
 "use client";
-import React, {useState} from "react";
+import React from "react";
 import FilesDragAndDrop from '@yelysei/react-files-drag-and-drop';
+import {processLeaveDatabase, processMasterDatabase, processTurnstyleData} from "src/functions";
 
 
 interface UploadFilesProps {
-    fileFn: (file: File) => any;
+    fileType: "turnstile" | "hostel" | "leave";
+    text?: string;
 }
 
-export const UploadFiles: React.FC<UploadFilesProps> = ({fileFn}) => {
+export const UploadFiles: React.FC<UploadFilesProps> = ({fileType, text}) => {
+    // @ts-ignore
+    const fileFn = (fileType === "turnstile") ? processTurnstyleData : (fileType === "hostel") ? processMasterDatabase : processLeaveDatabase
+    text = text || "Upload Turnstile files";
 
-    const [files, setFiles] = useState<File[]>();
+    const [files, setFiles] = React.useState<FileList | null>(null);
+
+    const handleSubmit = async (event: any) => {
+        event.preventDefault();
+        if (!files) return;
+        const formData = new FormData();
+        formData.append('files', files[0]);
+        try {
+            await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            // Process the response as needed
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
+    };
+
+
     return (
         <form
-            onSubmit={e => {
-                e.preventDefault();
-                // @ts-ignore
-                for (let file of files) {
-                    console.log(file);
-                    fileFn(file)
-                }
-            }}
+            onSubmit={handleSubmit}
             style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -58,7 +75,7 @@ export const UploadFiles: React.FC<UploadFilesProps> = ({fileFn}) => {
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                 }}>
-                    <span>Upload Turnstile files</span>
+                    <span>{text}</span>
                     <span>+</span>
                 </div>
             </FilesDragAndDrop>
@@ -66,8 +83,8 @@ export const UploadFiles: React.FC<UploadFilesProps> = ({fileFn}) => {
                 type="submit"
                 value="Fetch Data!"
                 name="submit"
-                id="submit"
                 disabled={files === null}
+                id="submit"
                 style={{
                     margin: '0 auto',
                     backgroundColor: 'var(--secondary-color)',

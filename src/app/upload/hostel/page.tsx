@@ -2,7 +2,6 @@ import React from 'react';
 import SecondHeader from "src/app/_components/SecondHeader";
 import UploadFiles from "../_components/UploadFiles/UploadFiles";
 import "./uploadHostel.scss"
-import processMasterDatabase from "src/functions/processMasterDatabase";
 
 export default function HostelUpload() {
     const blocks: { [key: string]: string } = {
@@ -36,7 +35,7 @@ export default function HostelUpload() {
                     </form>
                 </div>
                 <div id="right">
-                    <UploadFiles fileFn={processMasterDatabase}/>
+                    <UploadFiles fileType={"hostel"} text={"Upload Hostel Data"}/>
                 </div>
             </div>
         </>

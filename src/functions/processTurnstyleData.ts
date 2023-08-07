@@ -1,7 +1,9 @@
+"use server"
 import {Workbook, Row} from "exceljs";
 import {ReadableWebToNodeStream} from "readable-web-to-node-stream";
 
 const processTurnstyleData = async (file: File): Promise<[string, TurnstileData]> => {
+    // "use server"
     const workbook: Workbook = new Workbook();
     const filestream = new ReadableWebToNodeStream(file.stream())
     // @ts-ignore
