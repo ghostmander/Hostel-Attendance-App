@@ -12,7 +12,7 @@ export default function Report({searchParams}: {
 }) {
     return (
         <div id={"main-content"}>
-            <SecondHeader title={"View Attendance Report: "}/>
+            <SecondHeader title={"View Attendance Report"}/>
             <DataViewer date={
                 new Date().toLocaleDateString("en-GB", {
                     day: "2-digit",

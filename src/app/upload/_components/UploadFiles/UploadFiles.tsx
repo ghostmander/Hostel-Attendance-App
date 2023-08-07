@@ -2,6 +2,7 @@
 import React from "react";
 import FilesDragAndDrop from '@yelysei/react-files-drag-and-drop';
 import {processLeaveDatabase, processMasterDatabase, processTurnstyleData} from "src/functions";
+import axios from "axios";
 
 
 interface UploadFilesProps {
@@ -20,13 +21,11 @@ export const UploadFiles: React.FC<UploadFilesProps> = ({fileType, text}) => {
         event.preventDefault();
         if (!files) return;
         const formData = new FormData();
-        formData.append('files', files[0]);
+        for (let i = 0; i < files.length; i++) formData.append(`file${i}`, files[i]);
+        formData.append("numFiles", files.length.toString());
+        formData.append("fileType", fileType);
         try {
-            await fetch('/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
-
+            await axios.post('/api/upload', formData)
             // Process the response as needed
         } catch (error) {
             console.error('Error uploading file:', error);

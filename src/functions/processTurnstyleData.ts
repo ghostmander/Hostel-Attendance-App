@@ -1,45 +1,33 @@
-"use server"
-import {Workbook, Row} from "exceljs";
-import {ReadableWebToNodeStream} from "readable-web-to-node-stream";
+import fs from "fs";
+import saveRecords from "./saveRecords";
+import processTurnstyleDataHelper from "./processTurnstyleDataHelper";
 
-const processTurnstyleData = async (file: File): Promise<[string, TurnstileData]> => {
-    // "use server"
-    const workbook: Workbook = new Workbook();
-    const filestream = new ReadableWebToNodeStream(file.stream())
-    // @ts-ignore
-    return await workbook.xlsx.read(filestream).then(() => {
-        // WORKSHEET 1 - Turnstile Data is on Sheet1.
-        const worksheet = workbook.getWorksheet(1);
+const processTurnstyleData = async (file: File) => {
+    const masterDatabase: MasterData = (!fs.existsSync("database/master.json"))
+        ? {} : JSON.parse(fs.readFileSync("database/master.json", "utf-8"));
+    const leaveDatabase: Set<string> = (!fs.existsSync("database/leave.json"))
+        ? new Set<string>() : new Set(JSON.parse(fs.readFileSync("database/leave.json", "utf-8")));
+    // Read the database/master.json and database/leave.json
+    const masterRegNos: Set<string> = new Set(Object.keys(masterDatabase))
 
+    // Process the turnstile data
+    const [date, turnstileDatabase]: [string, TurnstileData] = await processTurnstyleDataHelper(file)
 
-        // Set to keep track of duplicate entries.
-        const seenRegNos: Set<string> = new Set();
-
-        // Variables
-        const date: string = worksheet.getRow(5).getCell(1).toString().slice(-10,)
-        const data: TurnstileData = {};
-
-        // Regex to extract the name from the cell.
-        const nameExtractor = new RegExp(/(?:(?:(\w-)|(-\w))\d*\w? )?(?<Name>[A-Z .]+)$/g);
-
-        // Helper function to get the value of a cell and convert it to uppercase.
-        const getUpperCell = (row: Row, col: number): string => row.getCell(col).toString().toUpperCase();
-
-        // Loop through the rows and extract the data.
-        for (let i = 8; i <= worksheet.rowCount; i++) {
-            const row: Row = worksheet.getRow(i);
-            const regNo: string = getUpperCell(row, 2);
-            if (seenRegNos.has(regNo)) continue;
-            const name: string = getUpperCell(row, 1).replace(nameExtractor, "$<Name>");
-            const time: string = getUpperCell(row, 6);
-            const checkpoint: string = getUpperCell(row, 10);
-            const isEntry: boolean = /ENTRY/.test(checkpoint);
-            const status: string = isEntry ? "PRESENT" : "ABSENT";
-            seenRegNos.add(regNo);
-            data[regNo] = {name, time, isEntry, isNewEntry: false, isOnLeave: false, status};
+    // onLeave and isNewEntry are not set in processTurnstyleData, so we set them here
+    for (const regNo of Object.keys(turnstileDatabase)) {
+        const studentData = turnstileDatabase[regNo];
+        if (studentData) {
+            studentData.isNewEntry = !masterRegNos.has(regNo);
+            studentData.isOnLeave = leaveDatabase.has(regNo);
+            if (studentData.isEntry && !studentData.isOnLeave) studentData.status = "PRESENT";
+            else if (!studentData.isEntry && !studentData.isOnLeave) studentData.status = "ABSENT";
+            else if (studentData.isEntry && studentData.isOnLeave) studentData.status = "LEAVE_REPORTED";
+            else if (!studentData.isEntry && studentData.isOnLeave) studentData.status = "LEAVE";
+            if (studentData.isNewEntry) studentData.status = `NE_${studentData.status}`;
         }
-        return [date, data];
-    });
+    }
+    await saveRecords(date, turnstileDatabase)
+
 }
 
 export default processTurnstyleData;

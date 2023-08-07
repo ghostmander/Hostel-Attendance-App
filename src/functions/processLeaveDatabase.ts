@@ -1,11 +1,11 @@
-"use server"
 import {Row, Workbook} from "exceljs";
 import {ReadableWebToNodeStream} from "readable-web-to-node-stream";
-// const fs = require('fs');
+
+const fs = require('fs');
 
 export const processLeaveDatabase = async (file: File): Promise<Set<string>> => {
-    // "use server"
-    console.log(file)
+    if (!fs.existsSync("database")) fs.mkdirSync("database");
+    if (!fs.existsSync("logs")) fs.mkdirSync("logs");
     const workbook: Workbook = new Workbook();
     const filestream = new ReadableWebToNodeStream(file?.stream())
     // @ts-ignore
@@ -16,7 +16,7 @@ export const processLeaveDatabase = async (file: File): Promise<Set<string>> => 
             const regNo: string = row.getCell(1).toString().toUpperCase().trim();
             data.add(regNo);
         });
-        // fs.writeFileSync("database/leave.json", JSON.stringify([...data], null, 0));
+        fs.writeFileSync("database/leave.json", JSON.stringify([...data], null, 0));
         return data;
 
     });

@@ -12,7 +12,7 @@ export default function OldReport({searchParams}: {
 }) {
     return (
         <div id={"main-content"}>
-            <SecondHeader title={"View Previous Attendance Report: "} needButton={true}/>
+            <SecondHeader title={"View Previous Attendance Report"}/>
             <DataViewer isDateNeeded date={"2023-07-21"} searchParams={searchParams}/>
         </div>
     )
