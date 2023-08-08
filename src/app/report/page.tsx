@@ -8,6 +8,7 @@ export default function Report({searchParams}: {
         regno: string | undefined;
         status: string | undefined;
         date: string | undefined;
+        block: "BHB1" | "BHB2" | "BHB3" | "GHB1" | undefined
     }
 }) {
     return (

@@ -30,11 +30,17 @@ const processTurnstyleDataHelper = async (file: File): Promise<[string, Turnstil
             if (seenRegNos.has(regNo)) continue;
             const name: string = getUpperCell(row, 1).replace(nameExtractor, "$<Name>");
             const time: string = getUpperCell(row, 6);
+            const block: string = getUpperCell(row, 8).split("/")[1]
+            let blVal: "BHB1" | "BHB2" | "BHB3" | "GHB1" | "" = "";
+            if (block === "BLOCK 1") blVal = "BHB1"
+            else if (block === "BLOCK 2") blVal = "BHB2"
+            else if (block === "BLOCK 3") blVal = "BHB3"
+            else if (block === "GHBLOCK 1") blVal = "GHB1"
             const checkpoint: string = getUpperCell(row, 10);
             const isEntry: boolean = /ENTRY/.test(checkpoint);
             const status: string = isEntry ? "PRESENT" : "ABSENT";
             seenRegNos.add(regNo);
-            data[regNo] = {name, time, isEntry, isNewEntry: false, isOnLeave: false, status};
+            data[regNo] = {name, time, blVal, isEntry, isNewEntry: false, isOnLeave: false, status};
         }
         return [date, data];
     });

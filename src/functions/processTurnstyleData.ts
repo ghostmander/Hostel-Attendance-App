@@ -1,6 +1,6 @@
 import fs from "fs";
-import saveRecords from "./saveRecords";
 import processTurnstyleDataHelper from "./processTurnstyleDataHelper";
+import {saveRecords} from "./index";
 
 const processTurnstyleData = async (file: File) => {
     const masterDatabase: MasterData = (!fs.existsSync("database/master.json"))
@@ -11,7 +11,8 @@ const processTurnstyleData = async (file: File) => {
     const masterRegNos: Set<string> = new Set(Object.keys(masterDatabase))
 
     // Process the turnstile data
-    const [date, turnstileDatabase]: [string, TurnstileData] = await processTurnstyleDataHelper(file)
+    let [date, turnstileDatabase]: [string, TurnstileData] = await processTurnstyleDataHelper(file)
+
 
     // onLeave and isNewEntry are not set in processTurnstyleData, so we set them here
     for (const regNo of Object.keys(turnstileDatabase)) {
