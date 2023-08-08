@@ -1,6 +1,6 @@
 import fs from "fs";
 import processTurnstyleDataHelper from "./processTurnstyleDataHelper";
-import {saveRecords} from "./index";
+import {readRecords, saveRecords} from "./index";
 
 const processTurnstyleData = async (file: File) => {
     const masterDatabase: MasterData = (!fs.existsSync("database/master.json"))
@@ -9,6 +9,7 @@ const processTurnstyleData = async (file: File) => {
         ? new Set<string>() : new Set(JSON.parse(fs.readFileSync("database/leave.json", "utf-8")));
     // Read the database/master.json and database/leave.json
     const masterRegNos: Set<string> = new Set(Object.keys(masterDatabase))
+    const masterRegNosCopy: Set<string> = new Set(Object.keys(masterDatabase))
 
     // Process the turnstile data
     let [date, turnstileDatabase]: [string, TurnstileData] = await processTurnstyleDataHelper(file)
@@ -18,7 +19,8 @@ const processTurnstyleData = async (file: File) => {
     for (const regNo of Object.keys(turnstileDatabase)) {
         const studentData = turnstileDatabase[regNo];
         if (studentData) {
-            studentData.isNewEntry = !masterRegNos.has(regNo);
+            if (masterRegNos.has(regNo)) masterRegNosCopy.delete(regNo);
+            else studentData.isNewEntry = true;
             studentData.isOnLeave = leaveDatabase.has(regNo);
             if (studentData.isEntry && !studentData.isOnLeave) studentData.status = "PRESENT";
             else if (!studentData.isEntry && !studentData.isOnLeave) studentData.status = "ABSENT";
@@ -27,7 +29,29 @@ const processTurnstyleData = async (file: File) => {
             if (studentData.isNewEntry) studentData.status = `NE_${studentData.status}`;
         }
     }
-    await saveRecords(date, turnstileDatabase)
+    if (masterRegNosCopy.size > 0) {
+        for (const regNo of masterRegNosCopy) {
+            let block = masterDatabase[regNo].block;
+            let bl: "" | "BHB1" | "BHB2" | "BHB3" | "GHB1" = ""
+            if (/BH ?BLOCK.*?1/i.test(block)) bl = "BHB1";
+            else if (/BH ?BLOCK.*?2/i.test(block)) bl = "BHB2";
+            else if (/BH ?BLOCK.*?3/i.test(block)) bl = "BHB3";
+            else if (/GH ?BLOCK.*?1/i.test(block)) bl = "GHB1";
+            turnstileDatabase[regNo] = {
+                blVal: bl,
+                name: masterDatabase[regNo].name,
+                time: "",
+                isNewEntry: false,
+                isEntry: false,
+                isOnLeave: leaveDatabase.has(regNo),
+                status: "UNKNOWN"
+            };
+        }
+    }
+    const oldData = readRecords(date);
+    if (oldData) for (const regNo of Object.keys(oldData))
+        if (!turnstileDatabase[regNo]) turnstileDatabase[regNo] = oldData[regNo];
+    await saveRecords(date, turnstileDatabase);
 
 }
 
