@@ -27,7 +27,7 @@ export const DataViewer: React.FC<DataViewerProps> = async ({isDateNeeded, date,
         "BHB3": "Boys Block-3",
         "GHB1": "Girls Block-1"
     }
-    const downloadFormats: string[] = ["Excel", "PDF", "CSV"];
+    const downloadFormats: string[] = ["Excel", "PDF"];
 
     const filters = {
         name: searchParams.name ?? undefined,
@@ -58,7 +58,7 @@ export const DataViewer: React.FC<DataViewerProps> = async ({isDateNeeded, date,
             if (filters.name && !value.name.includes(filters.name.toUpperCase())) continue;
             if (filters.regno && !key.includes(filters.regno.toUpperCase())) continue;
             if (filters.status && !(value.status === filters.status.toUpperCase())) continue;
-            if (!(value.blVal === filters.block)) continue
+            if (!(value.blVal === filters.block)) continue;        
             if (data === undefined) data = {};
             data[key] = value;
         }
