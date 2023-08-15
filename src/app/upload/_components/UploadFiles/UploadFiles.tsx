@@ -29,13 +29,15 @@ export const UploadFiles: React.FC<UploadFilesProps> = ({}) => {
         for (let i = 0; i < turnstilefiles.length; i++) formData.append(`turnstilefile${i}`, turnstilefiles[i]);
         formData.append("numTurnstileFiles", turnstilefiles.length.toString())
 
-        try {
-            // Add a loader here to show that the files are being uploaded
-            await axios.post('/api/upload', formData)
+        // TODO: Add a loader here to show that the files are being uploaded
+        axios.post('/api/upload', formData).then(() => {
             alert("Files uploaded successfully!")
-        } catch (error) {
-            console.error('Error uploading file:', error);
-        }
+        }).catch(
+            (error) => {
+                console.log(error);
+                alert("Error uploading files!");
+            }
+        )
     };
 
 
