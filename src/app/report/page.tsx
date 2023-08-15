@@ -13,14 +13,8 @@ export default function Report({searchParams}: {
 }) {
     return (
         <div id={"main-content"}>
-            <SecondHeader title={"View Attendance Report"}/>
-            <DataViewer date={
-                new Date().toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric"
-                }).split("/").reverse().join("-")
-            } searchParams={searchParams} isDateNeeded={false}/>
+            <SecondHeader title={"View Report"}/>
+            <DataViewer isDateNeeded date={"2023-07-21"} searchParams={searchParams}/>
         </div>
     )
 }

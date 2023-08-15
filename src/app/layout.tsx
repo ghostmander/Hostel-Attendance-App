@@ -16,7 +16,7 @@ interface RootLayoutProps {
 export default function RootLayout({children}: RootLayoutProps) {
     const routes = [
         {name: `Home`, path: `/`},
-        {name: `View Report`, path: `/report/old`},
+        {name: `View Report`, path: `/report`},
         {name: `Upload Data`, path: `/upload`},
         {name: `Sign Out`, path: `/upload/leave`},
     ];
