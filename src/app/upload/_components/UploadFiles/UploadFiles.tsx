@@ -1,32 +1,37 @@
 "use client";
 import React from "react";
 import FilesDragAndDrop from '@yelysei/react-files-drag-and-drop';
-import {processLeaveDatabase, processMasterDatabase, processTurnstyleData} from "src/functions";
 import axios from "axios";
-
+import "./UploadFiles.scss";
 
 interface UploadFilesProps {
-    fileType: "turnstile" | "hostel" | "leave";
-    text?: string;
 }
 
-export const UploadFiles: React.FC<UploadFilesProps> = ({fileType, text}) => {
-    // @ts-ignore
-    const fileFn = (fileType === "turnstile") ? processTurnstyleData : (fileType === "hostel") ? processMasterDatabase : processLeaveDatabase
-    text = text || "Upload Turnstile files";
-
-    const [files, setFiles] = React.useState<FileList | null>(null);
+export const UploadFiles: React.FC<UploadFilesProps> = ({}) => {
+    const [leavefiles, setLeaveFiles] = React.useState<FileList | null>(null);
+    const [masterfiles, setMasterFiles] = React.useState<FileList | null>(null);
+    const [turnstilefiles, setTurnstilefiles] = React.useState<FileList | null>(null);
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
-        if (!files) return;
+        if (!leavefiles || !masterfiles || !turnstilefiles) return;
         const formData = new FormData();
-        for (let i = 0; i < files.length; i++) formData.append(`file${i}`, files[i]);
-        formData.append("numFiles", files.length.toString());
-        formData.append("fileType", fileType);
+
+        // Leave files
+        for (let i = 0; i < leavefiles.length; i++) formData.append(`leavefile${i}`, leavefiles[i]);
+        formData.append("numLeaveFiles", leavefiles.length.toString())
+
+        // Master files
+        for (let i = 0; i < masterfiles.length; i++) formData.append(`masterfile${i}`, masterfiles[i]);
+        formData.append("numMasterFiles", masterfiles.length.toString())
+
+        // Turnstile files
+        for (let i = 0; i < turnstilefiles.length; i++) formData.append(`turnstilefile${i}`, turnstilefiles[i]);
+        formData.append("numTurnstileFiles", turnstilefiles.length.toString())
+
         try {
+            // Add a loader here to show that the files are being uploaded
             await axios.post('/api/upload', formData)
-            // Process the response as needed
         } catch (error) {
             console.error('Error uploading file:', error);
         }
@@ -34,55 +39,122 @@ export const UploadFiles: React.FC<UploadFilesProps> = ({fileType, text}) => {
 
 
     return (
-        <form
-            onSubmit={handleSubmit}
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                gap: '2em',
-                width: '70%',
-                margin: '0 auto',
-            }}>
-            <FilesDragAndDrop
-                onUpload={(filelist) => {
-                    // @ts-ignore
-                    setFiles(filelist);
-                }}
-                formats={['xls', 'xlsx']}
-                containerStyles={{
-                    backgroundColor: 'var(--secondary-color)',
-                    position: 'relative',
-                    borderRadius: '3rem',
-                    width: '450px',
-                    maxWidth: '100%',
-                    padding: '5rem 0',
-                    margin: '0 auto',
-                    fontSize: '1.5rem',
-                }}
-                openDialogOnClick
-            >
-                <div style={{
-                    fontSize: '2rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    color: 'var(--accent-color)',
-                    fontWeight: 300,
-                    lineHeight: 1.4,
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                }}>
-                    <span>{text}</span>
-                    <span>+</span>
+        <form onSubmit={handleSubmit}>
+            <div id="file-uploaders">
+                <div id="left">
+                    <FilesDragAndDrop
+                        onUpload={(filelist) => {
+                            // @ts-ignore
+                            setMasterFiles(filelist);
+                        }}
+                        formats={['xls', 'xlsx']}
+                        containerStyles={{
+                            backgroundColor: 'var(--secondary-color)',
+                            position: 'relative',
+                            borderRadius: '3rem',
+                            width: '450px',
+                            maxWidth: '100%',
+                            padding: '5rem 0',
+                            margin: '0 auto',
+                            fontSize: '1.5rem',
+                        }}
+                        openDialogOnClick
+                    >
+                        <div style={{
+                            fontSize: '2rem',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            color: 'var(--accent-color)',
+                            fontWeight: 300,
+                            lineHeight: 1.4,
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                        }}>
+                            <span>Upload Hostel Data</span>
+                            <span>+</span>
+                        </div>
+                    </FilesDragAndDrop>
                 </div>
-            </FilesDragAndDrop>
+                <div id="center">
+                    <FilesDragAndDrop
+                        onUpload={(filelist) => {
+                            // @ts-ignore
+                            setLeaveFiles(filelist);
+                        }}
+                        formats={['xls', 'xlsx']}
+                        containerStyles={{
+                            backgroundColor: 'var(--secondary-color)',
+                            position: 'relative',
+                            borderRadius: '3rem',
+                            width: '450px',
+                            maxWidth: '100%',
+                            padding: '5rem 0',
+                            margin: '0 auto',
+                            fontSize: '1.5rem',
+                        }}
+                        openDialogOnClick
+                    >
+                        <div style={{
+                            fontSize: '2rem',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            color: 'var(--accent-color)',
+                            fontWeight: 300,
+                            lineHeight: 1.4,
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                        }}>
+                            <span>Upload Leave List</span>
+                            <span>+</span>
+                        </div>
+                    </FilesDragAndDrop>
+                </div>
+                <div id="right">
+                    <FilesDragAndDrop
+                        onUpload={(filelist) => {
+                            // @ts-ignore
+                            setTurnstilefiles(filelist);
+                        }}
+                        formats={['xls', 'xlsx']}
+                        containerStyles={{
+                            backgroundColor: 'var(--secondary-color)',
+                            position: 'relative',
+                            borderRadius: '3rem',
+                            width: '450px',
+                            maxWidth: '100%',
+                            padding: '5rem 0',
+                            margin: '0 auto',
+                            fontSize: '1.5rem',
+                        }}
+                        openDialogOnClick
+                    >
+                        <div style={{
+                            fontSize: '2rem',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            color: 'var(--accent-color)',
+                            fontWeight: 300,
+                            lineHeight: 1.4,
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                        }}>
+                            <span>Upload Turnstile Data</span>
+                            <span>+</span>
+                        </div>
+                    </FilesDragAndDrop>
+                </div>
+            </div>
             <input
                 type="submit"
                 value="Fetch Data!"
                 name="submit"
-                disabled={files === null}
+                disabled={leavefiles === null || masterfiles === null || turnstilefiles === null}
                 id="submit"
                 style={{
                     margin: '0 auto',

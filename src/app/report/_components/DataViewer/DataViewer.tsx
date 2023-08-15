@@ -20,13 +20,6 @@ interface DataViewerProps {
 
 
 export const DataViewer: React.FC<DataViewerProps> = async ({isDateNeeded, date, searchParams}) => {
-    // @ts-ignore
-    const blockSelection: { [key: string]: string } = {
-        "BHB1": "Boys Block-1",
-        "BHB2": "Boys Block-2",
-        "BHB3": "Boys Block-3",
-        "GHB1": "Girls Block-1"
-    }
     const downloadFormats: string[] = ["Excel", "PDF", "CSV"];
 
     const filters = {

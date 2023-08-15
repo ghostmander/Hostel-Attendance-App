@@ -1,7 +1,3 @@
-// import {NextApiRequest, NextApiResponse} from 'next';
-// import formidable, {IncomingForm} from 'formidable';
-// import fs from 'fs';
-// import path from 'path';
 import {NextResponse} from "next/server";
 import {processLeaveDatabase, processMasterDatabase, processTurnstyleData} from "src/functions";
 
@@ -9,23 +5,30 @@ import {processLeaveDatabase, processMasterDatabase, processTurnstyleData} from 
 export async function POST(request: Request) {
     try {
         const formdata = await request.formData();
-        // const file = formdata.get('files');
-        console.log(formdata)
-        const fileType = formdata.get('fileType')
-        const numFiles = parseInt(formdata.get('numFiles') as string)
-        console.log(numFiles)
-        const files: File[] = []
-        for (let i = 0; i < numFiles; i++) files.push(formdata.get(`file${i}`) as File)
 
-        // @ts-ignore
-        const fileFn = (fileType === "turnstile") ? processTurnstyleData : (fileType === "hostel") ? processMasterDatabase : processLeaveDatabase
-        console.log(files)
-        for (const file of files) {
-            await fileFn(file)
-        }
+        // Leave files
+        const numLeaveFiles = parseInt(formdata.get('numLeaveFiles') as string)
+        const leaveFiles: File[] = []
+        for (let i = 0; i < numLeaveFiles; i++) leaveFiles.push(formdata.get(`leavefile${i}`) as File)
+
+        // Turnstile files
+        const numTurnstileFiles = parseInt(formdata.get('numTurnstileFiles') as string)
+        const turnstileFiles: File[] = []
+        for (let i = 0; i < numTurnstileFiles; i++) turnstileFiles.push(formdata.get(`turnstilefile${i}`) as File)
+
+        // Hostel files
+        const numMasterFiles = parseInt(formdata.get('numMasterFiles') as string)
+        const masterFiles: File[] = []
+        for (let i = 0; i < numMasterFiles; i++) masterFiles.push(formdata.get(`masterfile${i}`) as File)
+
+
+        // Process files
+        for (const leaveFile of leaveFiles) await processLeaveDatabase(leaveFile)
+        for (const turnstileFile of turnstileFiles) await processTurnstyleData(turnstileFile)
+        for (const masterFile of masterFiles) await processMasterDatabase(masterFile)
 
         return NextResponse.json({
-            message: 'File uploaded successfully',
+            message: 'Files uploaded successfully',
             success: true
         })
     } catch (error) {
