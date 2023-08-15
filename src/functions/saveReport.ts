@@ -32,12 +32,12 @@ export const generatePDF = (data,filters) => {
     const options = { format: 'Letter' };
 
     // @ts-ignore
-    const file = pdf.create(htmlString, options).toFile(filename, function (err, res) {
+    pdf.create(htmlString, options).toFile(filename, function (err, res) {
         if (err) return console.log(err);
         console.log(res);
     });
 
-    return file;
+    return filename;
 }
 
 //@ts-ignore
@@ -67,12 +67,12 @@ export const generateExcel = (data, filters) => {
 
     // create and return the excel file
 
-    const file = workbook.xlsx.writeFile(filename)
+    workbook.xlsx.writeFile(filename)
         .then(function () {
             console.log("file saved!");
         });
 
-    return file;
+    return filename;
 
 
 }

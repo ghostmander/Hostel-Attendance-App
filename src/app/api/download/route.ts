@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const file = await generateFile(data, filters);
 
-        res.setHeader('Content-Disposition', `attachment; filename="example-file.${fileExtension}"`);
+        res.setHeader('Content-Disposition', `attachment; filename="${file}.${fileExtension}"`);
         res.setHeader('Content-Type', 'application/octet-stream');
 
         // Pipe the generated file to the response object
