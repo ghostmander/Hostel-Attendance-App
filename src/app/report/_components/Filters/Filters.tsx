@@ -39,6 +39,7 @@ export const Filters: React.FC<FiltersProps> = ({isDateNeeded, defaultVals}) => 
                     <option value="ne_absent">New Entry - Absent</option>
                     <option value="ne_leave">New Entry - On Leave</option>
                     <option value="ne_leave_reported">New Entry - Reported from Leave</option>
+                    <option value="unknown">Unkown</option>
                 </select>
                 <select name="block" id="filter-block" defaultValue={block || "BHB1"}>
                     {

@@ -1,2 +1,3 @@
-- [ ] `UNKOWN` status - In masterdata not in Turnstile
-- [ ] COUNT
+- [x1] `UNKOWN` status - In masterdata not in Turnstile
+- [x1] COUNT
+- [ ] Download buttons
