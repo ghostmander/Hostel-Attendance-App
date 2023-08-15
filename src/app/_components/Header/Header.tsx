@@ -14,7 +14,7 @@ export const Header: React.FC<HeaderProps> = ({navbarProps}) => {
             </div>
             <div id="header-center">
                 <p>Hostel attendance management system</p>
-                <p>[HAMS v0.3]</p>
+                <p>[HAMS v0.4.3rc]</p>
             </div>
             <div id="header-right">
                 <Navbar routes={navbarProps?.routes || undefined}/>

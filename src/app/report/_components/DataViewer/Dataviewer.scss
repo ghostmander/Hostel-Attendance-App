@@ -52,6 +52,15 @@
     }
   }
 
+  #entry-count {
+    text-align: center;
+    font-weight: bold;
+    color: var(--accent-color);
+    span {
+      color: var(--primary-color);
+    }
+  }
+
   #tableview {
     overflow-y: scroll;
     overflow-x: hidden;

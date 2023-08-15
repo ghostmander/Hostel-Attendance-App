@@ -88,6 +88,8 @@ export const DataViewer: React.FC<DataViewerProps> = async ({isDateNeeded, date,
                         })
                     }
                 </div>
+                <p id="entry-count">Showing <span>{(data === undefined) ? 0 : Object.keys(data).length}</span> entries
+                </p>
                 <div id={"tableview"}>
                     <table>
                         <thead>
