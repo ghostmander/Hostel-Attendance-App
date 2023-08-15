@@ -1,3 +1,4 @@
+"use client"
 import React from 'react';
 import './Navbar.scss';
 
@@ -19,6 +20,9 @@ export const Navbar: React.FC<NavbarProps> = ({routes}) => {
         {name: `Upload Hostel Masterdata`, path: `/upload/hostel`},
         {name: `Upload Hosteler Leave Data`, path: `/upload/leave`},
     ];
+
+    // {name: `Sign Out`, path: `/api/logout`},
+
     return (
         <nav id="navbar">
             <label>

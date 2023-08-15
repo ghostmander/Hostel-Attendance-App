@@ -1,6 +1,8 @@
 import React from 'react';
 import SecondHeader from "../_components/SecondHeader";
 import DataViewer from "./_components/DataViewer";
+import {cookies} from "next/headers";
+import {redirect} from "next/navigation";
 
 export default function Report({searchParams}: {
     searchParams: {
@@ -11,6 +13,8 @@ export default function Report({searchParams}: {
         block: "BHB1" | "BHB2" | "BHB3" | "GHB1" | undefined
     }
 }) {
+    if (!cookies().get("user")) redirect("/login")
+
     return (
         <div id={"main-content"}>
             <SecondHeader title={"View Report"}/>

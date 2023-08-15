@@ -12,7 +12,7 @@ export default function LoginPage() {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
 
-        const response = await fetch('/api/signin', {
+        const response = await fetch('/api/auth', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({username, password}),
@@ -20,8 +20,7 @@ export default function LoginPage() {
         const {token, message, success, status} = await response.json();
         if (response.ok) {
             if (success) {
-                Cookies.set('user', token);
-                localStorage.setItem('user', token);
+                Cookies.set('user', token, {SameSite: 'Strict'});
                 window.location.href = "/"
             } else {
                 if (status === 401) alert(message)

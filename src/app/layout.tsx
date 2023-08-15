@@ -18,10 +18,10 @@ export default function RootLayout({children}: RootLayoutProps) {
         {name: `Home`, path: `/`},
         {name: `View Report`, path: `/report`},
         {name: `Upload Data`, path: `/upload`},
-        {name: `Sign Out`, path: `/upload/leave`},
     ];
     if (cookies().get("user")?.value === "admin")
         routes.push({name: `Admin`, path: `/admin`})
+    routes.push({name: `Sign Out`, path: `/api/auth`})
     return (
         <html lang="en">
             <body>

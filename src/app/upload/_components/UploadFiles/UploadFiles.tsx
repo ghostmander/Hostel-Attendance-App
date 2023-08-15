@@ -32,6 +32,7 @@ export const UploadFiles: React.FC<UploadFilesProps> = ({}) => {
         try {
             // Add a loader here to show that the files are being uploaded
             await axios.post('/api/upload', formData)
+            alert("Files uploaded successfully!")
         } catch (error) {
             console.error('Error uploading file:', error);
         }

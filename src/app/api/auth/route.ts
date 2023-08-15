@@ -1,4 +1,6 @@
 import {NextResponse} from "next/server";
+import {cookies} from "next/headers";
+import {redirect} from "next/navigation";
 
 export async function POST(request: Request) {
     // @ts-ignore
@@ -20,4 +22,9 @@ export async function POST(request: Request) {
             status: 401,
         });
     }
+}
+
+export async function GET() {
+    cookies().delete('user');
+    redirect('/login')
 }
