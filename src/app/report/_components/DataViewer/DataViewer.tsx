@@ -7,7 +7,6 @@ import Filters from "../Filters";
 
 
 interface DataViewerProps {
-    isDateNeeded: boolean;
     date: string;
     searchParams: {
         name: string | undefined;
@@ -19,7 +18,7 @@ interface DataViewerProps {
 }
 
 
-export const DataViewer: React.FC<DataViewerProps> = async ({isDateNeeded, date, searchParams}) => {
+export const DataViewer: React.FC<DataViewerProps> = async ({date, searchParams}) => {
     const downloadFormats: string[] = ["Excel", "PDF", "CSV"];
 
     const filters = {
@@ -58,7 +57,7 @@ export const DataViewer: React.FC<DataViewerProps> = async ({isDateNeeded, date,
     }
     return (
         <>
-            <Filters isDateNeeded={isDateNeeded} defaultVals={filters}/>
+            <Filters defaultVals={filters}/>
             <div id="main-data">
                 {/* <div id={"blockbtns"}>
                     {

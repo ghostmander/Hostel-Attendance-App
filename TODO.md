@@ -1,3 +1,6 @@
-- [x1] `UNKOWN` status - In masterdata not in Turnstile
-- [x1] COUNT
+- [x] `UNKOWN` status - In masterdata not in Turnstile
+- [x] COUNT
 - [ ] Download buttons
+- [ ] Admin Panel
+- [ ] Instructions on Home Page
+- [ ] Improvised Report Page

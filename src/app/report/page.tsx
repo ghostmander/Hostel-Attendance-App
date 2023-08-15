@@ -1,10 +1,9 @@
 import React from 'react';
-import SecondHeader from "../_components/SecondHeader";
-import DataViewer from "./_components/DataViewer";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
+import ReportGraph from "./_components/ReportGraph/ReportGraph";
 
-export default function Report({searchParams}: {
+export default async function Report({searchParams}: {
     searchParams: {
         name: string | undefined;
         regno: string | undefined;
@@ -15,10 +14,10 @@ export default function Report({searchParams}: {
 }) {
     if (!cookies().get("user")) redirect("/login")
 
+
     return (
         <div id={"main-content"}>
-            <SecondHeader title={"View Report"}/>
-            <DataViewer isDateNeeded date={"2023-07-21"} searchParams={searchParams}/>
+            <ReportGraph />
         </div>
     )
 }

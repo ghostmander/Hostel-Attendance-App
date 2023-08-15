@@ -20,7 +20,7 @@ export const Header: React.FC<HeaderProps> = ({navbarProps, isLogin}) => {
             </div>
             <div id="header-center">
                 <p>Hostel attendance management system</p>
-                <p>[HAMS v0.4.3rc]</p>
+                <p>[HAMS v0.6.9rc]</p>
             </div>
             <div id="header-right">
                 {!isLogin && <Navbar routes={navbarProps?.routes || undefined}/>}
