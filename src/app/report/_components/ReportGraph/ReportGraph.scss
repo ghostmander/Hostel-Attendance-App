@@ -78,4 +78,8 @@ body {
 
 #graph {
   height: 50vh;
+  display: flex;
+  justify-content: space-evenly;
+  margin: 5em;
+  align-items: center;
 }

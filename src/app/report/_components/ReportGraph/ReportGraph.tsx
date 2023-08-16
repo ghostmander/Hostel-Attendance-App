@@ -32,13 +32,13 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
         "BH Block 3": "BHB3",
         "GH Block 1": "GHB1"
     }
-
-    const getCount = (status: 'Present' | 'Absent' | 'Leave' | 'Leave_Reported' | 'Unknown') => {
+    const getCount = (status: string) => {
         let count = 0
         for (const [_, value] of Object.entries(data || {}))
             if ((value.status.endsWith(status.toUpperCase()))) count++;
         return count;
     }
+    // @ts-ignore
     return (
         <div id="reportGraph">
             <div id="row1">
@@ -67,7 +67,7 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
             </div>
             <div id={"graph"}>
                 <Doughnut data={{
-                    labels: ['Present', 'Absent', 'On Leave', 'Leave Reported', 'Unknown'],
+                    labels: ['Present', 'Absent', 'Leave', 'Leave_Reported', 'Unknown'],
                     datasets: [
                         {
                             label: '# of Students',
@@ -90,6 +90,12 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
                         },
                     ],
                 }}/>
+                <div id={"counts"}>
+                    {
+                        ['Present', 'Absent', 'Leave', 'Leave_Reported', 'Unknown'].map((v, idx) => <p
+                            key={idx}>{v}: {getCount(v)}</p>)
+                    }
+                </div>
             </div>
             <div id="table">
                 <DataViewer rawData={data || {}} filters={{name: undefined, regno: undefined, status: ""}}/>
