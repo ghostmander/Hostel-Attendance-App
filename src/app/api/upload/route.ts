@@ -6,6 +6,11 @@ export async function POST(request: Request) {
     try {
         const formdata = await request.formData();
 
+        // Hostel files
+        const numMasterFiles = parseInt(formdata.get('numMasterFiles') as string)
+        const masterFiles: File[] = []
+        for (let i = 0; i < numMasterFiles; i++) masterFiles.push(formdata.get(`masterfile${i}`) as File)
+
         // Leave files
         const numLeaveFiles = parseInt(formdata.get('numLeaveFiles') as string)
         const leaveFiles: File[] = []
@@ -16,16 +21,11 @@ export async function POST(request: Request) {
         const turnstileFiles: File[] = []
         for (let i = 0; i < numTurnstileFiles; i++) turnstileFiles.push(formdata.get(`turnstilefile${i}`) as File)
 
-        // Hostel files
-        const numMasterFiles = parseInt(formdata.get('numMasterFiles') as string)
-        const masterFiles: File[] = []
-        for (let i = 0; i < numMasterFiles; i++) masterFiles.push(formdata.get(`masterfile${i}`) as File)
-
 
         // Process files
+        for (const masterFile of masterFiles) await processMasterDatabase(masterFile)
         for (const leaveFile of leaveFiles) await processLeaveDatabase(leaveFile)
         for (const turnstileFile of turnstileFiles) await processTurnstyleData(turnstileFile)
-        for (const masterFile of masterFiles) await processMasterDatabase(masterFile)
 
         return NextResponse.json({
             message: 'Files uploaded successfully',

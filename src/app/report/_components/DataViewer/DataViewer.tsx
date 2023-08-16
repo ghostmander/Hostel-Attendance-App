@@ -10,10 +10,11 @@ interface DataViewerProps {
         status: string | undefined;
         showNE: boolean;
     }
+    showBlock?: boolean;
 }
 
 
-export const DataViewer: React.FC<DataViewerProps> = ({rawData, filters}) => {
+export const DataViewer: React.FC<DataViewerProps> = ({rawData, filters, showBlock}) => {
     const {name, regno, status, showNE} = filters
     let data: TurnstileData | undefined;
     // Filter out the data based on the filters
@@ -40,12 +41,13 @@ export const DataViewer: React.FC<DataViewerProps> = ({rawData, filters}) => {
                         <th>ID</th>
                         <th>Name</th>
                         <th>Status</th>
+                        {showBlock && <th>Block</th>}
                     </tr>
                     </thead>
                     <tbody id={"hostel-data-body"}>
                     {
                         (data === undefined) ? <tr>
-                                <td colSpan={3}>No Data Found</td>
+                                <td colSpan={showBlock ? 4: 3} style={{textAlign: "center"}}>No Data Found</td>
                             </tr> :
                             Object.entries(data).map(([key, value], index) => {
                                 return (
