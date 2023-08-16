@@ -17,6 +17,10 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
     // @ts-ignore
     const [date, setDate] = useState<string>("2023-07-21");
     const [block, setBlock] = useState<string | undefined>(undefined);
+    const [status, setStatus] = useState("");
+    const [showNE, setShowNE] = useState(true);
+    const [name, setName] = useState("");
+    const [regno, setRegno] = useState("");
     fetch('/api/getData', {
         method: 'POST',
         body: JSON.stringify({date: date, block: block})
@@ -34,6 +38,7 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
     }
     const getCount = (status: string) => {
         let count = 0
+        if (status === "All") return Object.keys(data || {}).length
         for (const [_, value] of Object.entries(data || {}))
             if ((value.status.endsWith(status.toUpperCase()))) count++;
         return count;
@@ -41,31 +46,35 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
     // @ts-ignore
     return (
         <div id="reportGraph">
-            <div id="row1">
-                <div id="blockFilters">
-                    {
-                        Object.entries(scrollableBtns).map(([key, value], index) => {
-                            return <div key={index} className={`filter ${(value === block) && 'active'}`}
-                                        onClick={() => {
-                                            setBlock(value)
-                                        }}>{key} </div>
-                        })
-                    }
-                </div>
-                <div id="dateFilters">
-                    <input type="date" name="date" id="filter-date" defaultValue={date} onChange={(e) => {
-                        setDate(e.target.value)
-                    }}/>
-                </div>
-                <div id="downloadBtns">
-                    <div className="mainBtn">
-                        <span>Download Report</span>
-                        <div className="stack">Excel</div>
-                        <div className="stack">PDF</div>
+            <div id="filters">
+                <div id="row1">
+                    <div id="blockFilters">
+                        {
+                            Object.entries(scrollableBtns).map(([key, value], index) => {
+                                return <div key={index} className={`filter ${(value === block) && 'active'}`}
+                                            onClick={() => {
+                                                setBlock(value)
+                                            }}>{key} </div>
+                            })
+                        }
+                    </div>
+                    <div id="dateFilters">
+                        <input type="date" name="date" id="filter-date" defaultValue={date} onChange={(e) => {
+                            setDate(e.target.value)
+                        }}/>
+                    </div>
+                    <div id="downloadBtns">
+                        <div className="mainBtn">
+                            <span>Download Report</span>
+                            <div className="stack">Excel</div>
+                            <div className="stack">PDF</div>
+                        </div>
                     </div>
                 </div>
+
             </div>
             <div id={"graph"}>
+                {/* TODO: Colors on this*/}
                 <Doughnut data={{
                     labels: ['Present', 'Absent', 'Leave', 'Leave_Reported', 'Unknown'],
                     datasets: [
@@ -92,13 +101,27 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
                 }}/>
                 <div id={"counts"}>
                     {
-                        ['Present', 'Absent', 'Leave', 'Leave_Reported', 'Unknown'].map((v, idx) => <p
-                            key={idx}>{v}: {getCount(v)}</p>)
+                        ['All', 'Present', 'Absent', 'Leave', 'Leave_Reported', 'Unknown'].map((v, idx) =>
+                            <p key={idx} onClick={() => {
+                                setStatus(v === "All" ? "" : v)
+                            }}><b>{v}:</b> {getCount(v)}</p>)
                     }
                 </div>
             </div>
             <div id="table">
-                <DataViewer rawData={data || {}} filters={{name: undefined, regno: undefined, status: ""}}/>
+                <div id="row2">
+                    <input type="text" name="name" id="filter-name" placeholder="Name" defaultValue={name}
+                           onChange={e => setName(e.target.value)}/>
+                    <input type="text" name="regno" id="filter-regno" placeholder="Registration Number"
+                           defaultValue={regno} onChange={e => setRegno(e.target.value)}/>
+                    <label>
+                        Show New Entries
+                        <input type="checkbox" name="showNE" id="filterNE" defaultChecked={showNE}
+                               onChange={() => setShowNE(!showNE)}/>
+                    </label>
+                </div>
+                <DataViewer rawData={data || {}}
+                            filters={{name: name, regno: regno, status: status, showNE: showNE}}/>
             </div>
         </div>
     )
