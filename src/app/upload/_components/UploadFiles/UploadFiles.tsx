@@ -5,9 +5,11 @@ import axios from "axios";
 import "./UploadFiles.scss";
 
 interface UploadFilesProps {
+    isHostelDataUploaded: boolean;
+    isLeaveListUploaded: boolean;
 }
 
-export const UploadFiles: React.FC<UploadFilesProps> = ({}) => {
+export const UploadFiles: React.FC<UploadFilesProps> = ({isHostelDataUploaded, isLeaveListUploaded}) => {
     const [lveFiles, setLveFiles] = React.useState<File[] | null>(null);
     const [mstFiles, setMstFiles] = React.useState<File[] | null>(null);
     const [tstFiles, setTstFiles] = React.useState<File[] | null>(null);
@@ -47,16 +49,20 @@ export const UploadFiles: React.FC<UploadFilesProps> = ({}) => {
     const fmt = ['xls', 'xlsx'];
     const handleSubmit = async (event: any) => {
         event.preventDefault();
-        if (!lveFiles || !mstFiles || !tstFiles) return;
+        if (!tstFiles) return;
         const formData = new FormData();
 
         // Leave files
-        for (let i = 0; i < lveFiles.length; i++) formData.append(`leavefile${i}`, lveFiles[i]);
-        formData.append("numLeaveFiles", lveFiles.length.toString())
+        if (lveFiles) {
+            for (let i = 0; i < lveFiles.length; i++) formData.append(`leavefile${i}`, lveFiles[i]);
+            formData.append("numLeaveFiles", lveFiles.length.toString())
+        }
 
         // Master files
-        for (let i = 0; i < mstFiles.length; i++) formData.append(`masterfile${i}`, mstFiles[i]);
-        formData.append("numMasterFiles", mstFiles.length.toString())
+        if (mstFiles) {
+            for (let i = 0; i < mstFiles.length; i++) formData.append(`masterfile${i}`, mstFiles[i]);
+            formData.append("numMasterFiles", mstFiles.length.toString())
+        }
 
         // Turnstile files
         for (let i = 0; i < tstFiles.length; i++) formData.append(`turnstilefile${i}`, tstFiles[i]);
@@ -75,42 +81,60 @@ export const UploadFiles: React.FC<UploadFilesProps> = ({}) => {
 
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div id="file-uploaders">
-                <div id="left">
-                    <FilesDragAndDrop onUpload={setMstFiles} formats={fmt} containerStyles={st} openDialogOnClick>
-                        <div style={divStyles}>
-                            <span>Upload Hostel Data</span>
-                            <span>+</span>
-                        </div>
-                    </FilesDragAndDrop>
+        <>
+            <form onSubmit={handleSubmit}>
+                <div id="file-uploaders">
+                    <div id="left">
+                        {isHostelDataUploaded && <p>Hostel Data already uploaded!</p>}
+                        <FilesDragAndDrop onUpload={setMstFiles} formats={fmt} containerStyles={st} openDialogOnClick>
+                            <div style={divStyles}>
+                                <span>Upload Hostel Data</span>
+                                <span>+</span>
+                            </div>
+                        </FilesDragAndDrop>
+                    </div>
+                    <div id="center">
+                        {isLeaveListUploaded && <p>Leave List already uploaded!</p>}
+                        <FilesDragAndDrop onUpload={setLveFiles} formats={fmt} containerStyles={st} openDialogOnClick>
+                            <div style={divStyles}>
+                                <span>Upload Leave List</span>
+                                <span>+</span>
+                            </div>
+                        </FilesDragAndDrop>
+                    </div>
+                    <div id="right">
+                        <FilesDragAndDrop onUpload={setTstFiles} formats={fmt} containerStyles={st} openDialogOnClick>
+                            <div style={divStyles}>
+                                <span>Upload Turnstile Data</span>
+                                <span>+</span>
+                            </div>
+                        </FilesDragAndDrop>
+                    </div>
                 </div>
-                <div id="center">
-                    <FilesDragAndDrop onUpload={setLveFiles} formats={fmt} containerStyles={st} openDialogOnClick>
-                        <div style={divStyles}>
-                            <span>Upload Leave List</span>
-                            <span>+</span>
-                        </div>
-                    </FilesDragAndDrop>
-                </div>
-                <div id="right">
-                    <FilesDragAndDrop onUpload={setTstFiles} formats={fmt} containerStyles={st} openDialogOnClick>
-                        <div style={divStyles}>
-                            <span>Upload Turnstile Data</span>
-                            <span>+</span>
-                        </div>
-                    </FilesDragAndDrop>
-                </div>
+                <input
+                    type="submit"
+                    value="Upload Data"
+                    name="submit"
+                    id="submit"
+                    style={submitStyles}
+                    disabled={tstFiles === null}
+                />
+            </form>
+            <div id="file-resetter">
+                <button
+                    style={submitStyles}
+                    id={"reset-data"}
+                    onClick={() => {
+                        confirm("Are you sure you want to reset all data?") && axios.post('/api/reset').then(() => {
+                            alert("Data reset successfully!")
+                        }).catch((error) => {
+                            console.log(error);
+                            alert("Error resetting data!");
+                        })
+                    }}
+                >Reset Data</button>
             </div>
-            <input
-                type="submit"
-                value="Fetch Data!"
-                name="submit"
-                id="submit"
-                style={submitStyles}
-                disabled={lveFiles === null || mstFiles === null || tstFiles === null}
-            />
-        </form>
+        </>
     );
 }
 

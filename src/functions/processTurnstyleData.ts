@@ -1,6 +1,7 @@
 import fs from "fs";
 import processTurnstyleDataHelper from "./processTurnstyleDataHelper";
 import {readRecords, saveRecords} from "./index";
+import * as console from "console";
 
 const processTurnstyleData = async (file: File) => {
     const masterDatabase: MasterData = (!fs.existsSync("database/master.json"))
@@ -15,6 +16,7 @@ const processTurnstyleData = async (file: File) => {
     let [date, turnstileDatabase]: [string, TurnstileData] = await processTurnstyleDataHelper(file)
 
 
+    console.log(masterRegNos.size)
     // onLeave and isNewEntry are not set in processTurnstyleData, so we set them here
     for (const regNo of Object.keys(turnstileDatabase)) {
         const studentData = turnstileDatabase[regNo];
@@ -48,9 +50,11 @@ const processTurnstyleData = async (file: File) => {
             };
         }
     }
-    const oldData = readRecords(date);
-    if (oldData) for (const regNo of Object.keys(oldData))
+    const oldData = readRecords( date.replace(/\//g, ""));
+    if (oldData) for (const regNo of Object.keys(oldData)) {
         if (!turnstileDatabase[regNo]) turnstileDatabase[regNo] = oldData[regNo];
+        else if (turnstileDatabase[regNo].status === "UNKNOWN") turnstileDatabase[regNo] = oldData[regNo];
+    }
     await saveRecords(date, turnstileDatabase);
 
 }
