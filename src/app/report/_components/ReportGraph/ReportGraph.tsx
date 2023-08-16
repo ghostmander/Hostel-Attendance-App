@@ -74,7 +74,6 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
 
             </div>
             <div id={"graph"}>
-                {/* TODO: Colors on this*/}
                 <Doughnut data={{
                     labels: ['Present', 'Absent', 'Leave', 'Leave_Reported', 'Unknown'],
                     datasets: [
@@ -82,18 +81,18 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
                             label: '# of Students',
                             data: [getCount('Present'), getCount('Absent'), getCount('Leave'), getCount('Leave_Reported'), getCount('Unknown')],
                             backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(133, 205, 61, 0.2)',
+                                'rgba(245, 109, 109, 0.2)',
+                                'rgba(239, 202, 72, 0.2)',
+                                'rgba(86, 131, 204, 0.2)',
+                                'rgba(170, 165, 148, 0.2)',
                             ],
                             borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
+                                'rgba(133, 205, 61, 1)',
+                                'rgba(245, 109, 109, 1)',
+                                'rgba(239, 202, 72, 1)',
+                                'rgba(86, 131, 204, 1)',
+                                'rgba(170, 165, 148, 1)',
                             ],
                             borderWidth: 1,
                         },
