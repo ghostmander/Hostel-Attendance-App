@@ -14,6 +14,13 @@ export async function POST(request: Request) {
             success: true,
             status: 200,
         })
+    } else if (username === 'user' && password === 'user') {
+        return NextResponse.json({
+            token: 'user',
+            message: 'Logged in successfully as user',
+            success: true,
+            status: 200,
+        })
     } else {
         return NextResponse.json({
             token: "invalid",

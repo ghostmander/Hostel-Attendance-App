@@ -80,7 +80,7 @@ export const UploadFiles: React.FC<UploadFilesProps> = ({isHostelDataUploaded, i
         <form onSubmit={handleSubmit}>
             <div id="file-uploaders">
                 <div id="left">
-                    {isHostelDataUploaded && <p>Old Hostel Data Found!</p>}
+                    {isHostelDataUploaded && <p>Hostel Data already uploaded!</p>}
                     <FilesDragAndDrop onUpload={setMstFiles} formats={fmt} containerStyles={st} openDialogOnClick>
                         <div style={divStyles}>
                             <span>Upload Hostel Data</span>
@@ -89,7 +89,7 @@ export const UploadFiles: React.FC<UploadFilesProps> = ({isHostelDataUploaded, i
                     </FilesDragAndDrop>
                 </div>
                 <div id="center">
-                    {isLeaveListUploaded && <p>Old Leave List Found!</p>}
+                    {isLeaveListUploaded && <p>Leave List already uploaded!</p>}
                     <FilesDragAndDrop onUpload={setLveFiles} formats={fmt} containerStyles={st} openDialogOnClick>
                         <div style={divStyles}>
                             <span>Upload Leave List</span>
