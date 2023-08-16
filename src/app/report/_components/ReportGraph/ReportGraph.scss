@@ -1,7 +1,7 @@
 @import "/src/app/globals.css";
 
 body {
-  overflow: scroll !important;
+  overflow-y: scroll !important;
 }
 
 #row1 {
@@ -26,13 +26,16 @@ body {
       text-align: center;
       font-weight: bold;
       cursor: pointer;
+
       &.active {
         background-color: var(--accent-color);
       }
     }
   }
+
   #dateFilters {
     display: flex;
+
     input {
       background-color: var(--secondary-color);
       border: none;
@@ -44,6 +47,7 @@ body {
       font-size: 1.2rem;
     }
   }
+
   .mainBtn {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -75,6 +79,7 @@ body {
     }
   }
 }
+
 #row2 {
   display: flex;
   flex-direction: row;
@@ -82,10 +87,12 @@ body {
   align-items: center;
   font-size: 1.2rem;
   margin: 2em 6em;
+
   & > * {
     width: 20%;
     text-align: center;
   }
+
   & > input {
     text-align: left;
     padding: 1em 2em;
@@ -94,12 +101,14 @@ body {
     border-radius: 1em;
   }
 }
+
 #graph {
-  height: 50vh;
+  height: 60vh;
   display: flex;
   justify-content: space-evenly;
   margin: 5em;
   align-items: center;
+
   p {
     cursor: pointer;
     background-color: var(--secondary-color);

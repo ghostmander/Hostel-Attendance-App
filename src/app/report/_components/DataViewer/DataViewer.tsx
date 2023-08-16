@@ -3,18 +3,18 @@ import "./Dataviewer.scss";
 
 
 interface DataViewerProps {
+    date: string;
     rawData: TurnstileData;
     filters: {
         name: string | undefined;
         regno: string | undefined;
         status: string | undefined;
         showNE: boolean;
-    }
-    showBlock?: boolean;
+    };
 }
 
 
-export const DataViewer: React.FC<DataViewerProps> = ({rawData, filters, showBlock}) => {
+export const DataViewer: React.FC<DataViewerProps> = ({date, rawData, filters}) => {
     const {name, regno, status, showNE} = filters
     let data: TurnstileData | undefined;
     // Filter out the data based on the filters
@@ -40,26 +40,30 @@ export const DataViewer: React.FC<DataViewerProps> = ({rawData, filters, showBlo
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
+                        <th>Last Seen</th>
+                        <th>Block</th>
                         <th>Status</th>
-                        {showBlock && <th>Block</th>}
                     </tr>
                     </thead>
                     <tbody id={"hostel-data-body"}>
                     {
                         (data === undefined) ? <tr>
-                                <td colSpan={showBlock ? 4: 3} style={{textAlign: "center"}}>No Data Found</td>
+                                <td colSpan={5} style={{textAlign: "center"}}>No Data Found</td>
                             </tr> :
-                            Object.entries(data).map(([key, value], index) => {
+                            Object.entries(data).map(([key, value]: [string, PersonData], index) => {
+                                let status = value.status;
+                                if (value.status === "UNKNOWN") status = "ABSENT"
+                                // @ts-ignore
                                 return (
                                     <tr key={index}>
                                         <td>{key}</td>
-                                        {/*@ts-ignore*/}
                                         <td>{value.name}</td>
+                                        {/*@ts-ignore*/}
+                                        <td>{`${value.time ? date: new Date((new Date(date)) - (3600000*24)).toISOString().split('T')[0]} ${value.time}`}</td>
+                                        <td>{value.blVal}</td>
                                         <td className={
-                                            // @ts-ignore
                                             value.status.replace("NE_", "").toLowerCase()
-                                            // @ts-ignore
-                                        }>{value.status}</td>
+                                        }>{status}</td>
                                     </tr>
                                 )
                             })

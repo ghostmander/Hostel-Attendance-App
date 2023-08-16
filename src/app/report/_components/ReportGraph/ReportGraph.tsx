@@ -39,8 +39,10 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
     const getCount = (status: string) => {
         let count = 0
         if (status === "All") return Object.keys(data || {}).length
-        for (const [_, value] of Object.entries(data || {}))
+        for (const [_, value] of Object.entries(data || {})) {
             if ((value.status.endsWith(status.toUpperCase()))) count++;
+            else if (status.toUpperCase() === "ABSENT" && value.status === "UNKNOWN") count++;
+        }
         return count;
     }
     // @ts-ignore
@@ -75,32 +77,37 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
             </div>
             <div id={"graph"}>
                 <Doughnut data={{
-                    labels: ['Present', 'Absent', 'Leave', 'Leave_Reported', 'Unknown'],
+                    labels: ['Present', 'Absent', 'Leave', 'Leave_Reported'],
                     datasets: [
                         {
                             label: '# of Students',
-                            data: [getCount('Present'), getCount('Absent'), getCount('Leave'), getCount('Leave_Reported'), getCount('Unknown')],
+                            data: [getCount('Present'), getCount('Absent'), getCount('Leave'), getCount('Leave_Reported')],
                             backgroundColor: [
                                 'rgba(133, 205, 61, 0.2)',
                                 'rgba(245, 109, 109, 0.2)',
                                 'rgba(239, 202, 72, 0.2)',
                                 'rgba(86, 131, 204, 0.2)',
-                                'rgba(170, 165, 148, 0.2)',
                             ],
                             borderColor: [
                                 'rgba(133, 205, 61, 1)',
                                 'rgba(245, 109, 109, 1)',
                                 'rgba(239, 202, 72, 1)',
                                 'rgba(86, 131, 204, 1)',
-                                'rgba(170, 165, 148, 1)',
                             ],
                             borderWidth: 1,
                         },
                     ],
+                }} options={{
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {font: {size: 19}}
+                        }
+                    }
                 }}/>
                 <div id={"counts"}>
                     {
-                        ['All', 'Present', 'Absent', 'Leave', 'Leave_Reported', 'Unknown'].map((v, idx) =>
+                        ['All', 'Present', 'Absent', 'Leave', 'Leave_Reported'].map((v, idx) =>
                             <p key={idx} onClick={() => {
                                 setStatus(v === "All" ? "" : v)
                             }}><b>{v}:</b> {getCount(v)}</p>)
@@ -119,7 +126,7 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
                                onChange={() => setShowNE(!showNE)}/>
                     </label>
                 </div>
-                <DataViewer rawData={data || {}}
+                <DataViewer date={date} rawData={data || {}}
                             filters={{name: name, regno: regno, status: status, showNE: showNE}}/>
             </div>
         </div>
