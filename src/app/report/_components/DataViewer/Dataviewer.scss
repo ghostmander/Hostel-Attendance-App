@@ -1,94 +1,31 @@
 @import "src/app/globals.css";
-//@import url("src/app/globals.css");
 
-#main-data {
-  background-color: var(--primary-bg);
-  width: 90%;
-  margin: 0 auto;
-  border-radius: 0.5rem;
-  padding-bottom: 2rem;
+#tableview {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 50vh;
 
-  #blockbtns, #downloadbtns {
-    width: 100%;
-    margin: 1rem auto;
-    display: flex;
-    justify-content: center;
-
-    label, button {
-      width: 100%;
-      color: var(--accent-color);
-      background-color: var(--secondary-color);
-      margin: 0;
-      padding: 0.5rem;
-      font-weight: bold;
-      border: 1px solid var(--primary-border);
-      border-radius: 0.5rem 0.5rem 0 0;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    input {
-      display: none;
-
-      &:checked + label {
-        background-color: var(--primary-bg);
-        color: var(--primary-color);
-        border-bottom: 0;
-      }
-    }
-  }
-
-  #downloadbtns {
-    width: 70%;
-    justify-content: space-around;
-
-    p, button {
-      width: 20%;
-      margin: 0;
-      padding: 0.5rem;
-      color: var(--primary-color);
-      font-weight: bold;
-      border-radius: 0.5rem;
-    }
-  }
-
-  #entry-count {
-    text-align: center;
+  table {
+    width: 90%;
+    margin: 0 auto;
+    border-collapse: collapse;
     font-weight: bold;
-    color: var(--accent-color);
-    span {
-      color: var(--primary-color);
+    text-transform: uppercase;
+
+    td, th {
+      border: 1px solid var(--primary-border);
+      padding: 0.5rem;
     }
-  }
 
-  #tableview {
-    overflow-y: scroll;
-    overflow-x: hidden;
-    height: 50vh;
+    th {
+      background-color: var(--accent-color);
+      color: var(--white);
+      position: sticky;
+      top: 0;
+    }
 
-    table {
-      width: 90%;
-      margin: 0 auto;
-      border-collapse: collapse;
-      text-align: center;
-      font-weight: bold;
-      text-transform: uppercase;
-
-      td, th {
-        border: 1px solid var(--primary-border);
-        padding: 0.5rem;
-      }
-
-      th {
-        background-color: var(--accent-color);
-        color: var(--white);
-        position: sticky;
-        top: 0;
-      }
-
-      tr:nth-of-type(2n + 1) {
-        background-color: var(--secondary-color);
-      }
+    tr:nth-of-type(2n + 1) {
+      background-color: var(--secondary-color);
     }
   }
 }

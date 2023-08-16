@@ -1,6 +1,12 @@
 "use client"
 import React, {useState} from 'react';
 import "./ReportGraph.scss";
+import DataViewer from "../DataViewer";
+import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js';
+import {Doughnut} from "react-chartjs-2";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
 interface ReportGraphProps {
 
 }
@@ -27,17 +33,22 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
         "GH Block 1": "GHB1"
     }
 
-
-
+    const getCount = (status: 'Present' | 'Absent' | 'Leave' | 'Leave_Reported' | 'Unknown') => {
+        let count = 0
+        for (const [_, value] of Object.entries(data || {}))
+            if ((value.status.endsWith(status.toUpperCase()))) count++;
+        return count;
+    }
     return (
         <div id="reportGraph">
             <div id="row1">
                 <div id="blockFilters">
                     {
                         Object.entries(scrollableBtns).map(([key, value], index) => {
-                            return <div key={index} className={`filter ${(value === block) && 'active'}`} onClick={() => {
-                                setBlock(value)
-                            }}>{key} </div>
+                            return <div key={index} className={`filter ${(value === block) && 'active'}`}
+                                        onClick={() => {
+                                            setBlock(value)
+                                        }}>{key} </div>
                         })
                     }
                 </div>
@@ -55,7 +66,33 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
                 </div>
             </div>
             <div id={"graph"}>
-
+                <Doughnut data={{
+                    labels: ['Present', 'Absent', 'On Leave', 'Leave Reported', 'Unknown'],
+                    datasets: [
+                        {
+                            label: '# of Students',
+                            data: [getCount('Present'), getCount('Absent'), getCount('Leave'), getCount('Leave_Reported'), getCount('Unknown')],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                            ],
+                            borderWidth: 1,
+                        },
+                    ],
+                }}/>
+            </div>
+            <div id="table">
+                <DataViewer rawData={data || {}} filters={{name: undefined, regno: undefined, status: ""}}/>
             </div>
         </div>
     )
