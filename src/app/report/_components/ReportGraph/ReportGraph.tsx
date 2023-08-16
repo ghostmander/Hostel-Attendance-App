@@ -15,8 +15,8 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
     // @ts-ignore
     const [data, setData] = useState<TurnstileData | undefined>(undefined);
     // @ts-ignore
-    const [date, setDate] = useState<string>("2023-07-21");
-    const [block, setBlock] = useState<string | undefined>(undefined);
+    const [date, setDate] = useState("2023-07-21");
+    const [block, setBlock] = useState("");
     const [status, setStatus] = useState("");
     const [showNE, setShowNE] = useState(true);
     const [name, setName] = useState("");
@@ -30,7 +30,7 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
         })
     })
     const scrollableBtns = {
-        "Overall": undefined,
+        "Overall": "",
         "BH Block 1": "BHB1",
         "BH Block 2": "BHB2",
         "BH Block 3": "BHB3",

@@ -3,4 +3,4 @@
 - [ ] Download buttons
 - [ ] Admin Panel
 - [ ] Instructions on Home Page
-- [ ] Improvised Report Page
+- [x] Improvised Report Page
