@@ -2,7 +2,6 @@ import React from 'react';
 import './Filters.scss';
 
 interface FiltersProps {
-    isDateNeeded: boolean;
     defaultVals: {
         name: string | undefined;
         regno: string | undefined;
@@ -13,7 +12,7 @@ interface FiltersProps {
 
 }
 
-export const Filters: React.FC<FiltersProps> = ({isDateNeeded, defaultVals}) => {
+export const Filters: React.FC<FiltersProps> = ({defaultVals}) => {
     const blockSelection: { [key: string]: string } = {
         "BHB1": "Boys Block-1",
         "BHB2": "Boys Block-2",
@@ -28,7 +27,7 @@ export const Filters: React.FC<FiltersProps> = ({isDateNeeded, defaultVals}) => 
                 <input type="text" name="name" id="filter-name" placeholder="Name" defaultValue={name}/>
                 <input type="text" name="regno" id="filter-regno" placeholder="Registration Number"
                        defaultValue={regno}/>
-                {isDateNeeded && <input type="date" name="date" id="filter-date" defaultValue={date}/>}
+                <input type="date" name="date" id="filter-date" defaultValue={date}/>
                 <select name="status" id="filter-status" defaultValue={status}>
                     <option value="">All</option>
                     <option value="present">Present</option>
