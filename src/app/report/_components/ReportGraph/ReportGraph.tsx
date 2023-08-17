@@ -40,6 +40,7 @@ const DownloadButton = (format: string, data: TurnstileData, date: string, block
             
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
+
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;

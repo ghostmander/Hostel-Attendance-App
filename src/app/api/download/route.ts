@@ -3,7 +3,6 @@ import fs from 'fs';
 import { NextResponse } from 'next/server';
 import { generatePDF, generateExcel } from 'src/functions';
 
-
 export async function POST(req: Request) {
     try {
         const { data, format, date, block } = JSON.parse(await req.text());
@@ -26,7 +25,7 @@ export async function POST(req: Request) {
         
         const filepath = `reports/${filename}`;
 
-        const file = fs.readFileSync(filepath);
+        const file = fs.createReadStream(filepath);
 
         return new NextResponse(file , {
             headers: {
