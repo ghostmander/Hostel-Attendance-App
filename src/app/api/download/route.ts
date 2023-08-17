@@ -1,39 +1,45 @@
 import fs from 'fs';
-import { NextApiRequest, NextApiResponse } from 'next';
+// import path from 'path';
+import { NextResponse } from 'next/server';
 import { generatePDF, generateExcel } from 'src/functions';
 
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: Request) {
     try {
-        const { filters, format } = req.body;
-        const data = req.body.data;
+        const { data, format, date, block } = JSON.parse(await req.text());
 
         let generateFile;
-        let fileExtension;
+        // let extension;
 
         // Determine which file generation function to use based on the 'format' query parameter
         if (format === 'PDF') {
             generateFile = generatePDF;
-            fileExtension = 'pdf';
-        } else if (format === 'EXCEL') {
+            // extension = 'pdf';
+        } else if (format === 'Excel') {
             generateFile = generateExcel;
-            fileExtension = 'xlsx';
+            // extension = 'xlsx';
         } else {
-            throw new Error('Invalid file format specified');
+            throw new Error('Invalid file format specified: '+format);
         }
 
-        const file = await generateFile(data, filters);
+        const filename = await generateFile(data, date, block);
+        
+        const filepath = `reports/${filename}`;
 
-        res.setHeader('Content-Disposition', `attachment; filename="${file}.${fileExtension}"`);
-        res.setHeader('Content-Type', 'application/octet-stream');
+        const file = fs.readFileSync(filepath);
 
-        // Pipe the generated file to the response object
-        fs.createReadStream(file).pipe(res);
+        return new NextResponse(file , {
+            headers: {
+                "Content-Type": "application/octet-stream",
+                "Content-Disposition": `attachment; filename="${filename}"`,
+            },
+        });
 
-        // Delete the file from the server after successful download
-        fs.unlinkSync(file);
+        
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        
+        return new Response(error.message, { status: 500 });
+
     }
 }

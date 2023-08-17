@@ -21,7 +21,7 @@ export const Header: React.FC<HeaderProps> = ({navbarProps, isLogin}) => {
                 </a>
             </div>
             <div id="header-center">
-                <p>Hostel attendance management system</p>
+                <p>Hostel Attendance Management System</p>
                 <p>[HAMS v0.6.9rc4]</p>
             </div>
             <div id="header-right">

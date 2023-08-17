@@ -11,6 +11,66 @@ interface ReportGraphProps {
 
 }
 
+const DownloadButton = (format: string, data: TurnstileData, date: string, block: string, index: number) => {
+    // Handle click event
+    const handleClick = async () => {
+      // Create request body
+      const requestBody = {
+        // Add your parameters here
+        format: format,
+        data: data,
+        date: date,
+        block: block
+
+      };
+      console.log(format + " " + date + " " + block);
+      try {
+        // Send POST request
+        const response = await fetch('/api/download', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+  
+        // Check if request was successful
+        if (response.ok) {
+            const response = await fetch('/api/download');
+            
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            
+            // the filename you want
+            a.download = `Report_${block}_${date}.${format === "Excel" ? "xlsx" : "pdf"}`;
+            
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            console.log('Your file has downloaded!');
+
+
+
+        } else {
+          // Handle error
+          console.error('Error:', response.status);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+    // Render download button
+    return (
+      <button onClick={handleClick} key={index} >
+        {format}
+      </button>
+    );
+};
+  
+
 export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
     // @ts-ignore
     const [data, setData] = useState<TurnstileData | undefined>(undefined);
@@ -45,6 +105,7 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
         }
         return count;
     }
+    const formats = ['Excel', 'PDF'];
     // @ts-ignore
     return (
         <div id="reportGraph">
@@ -68,8 +129,13 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
                     <div id="downloadBtns">
                         <div className="mainBtn">
                             <span>Download Report</span>
-                            <div className="stack">Excel</div>
-                            <div className="stack">PDF</div>
+
+                            {
+                                formats.map((format, index) => (
+                                    DownloadButton(format, data || {}, date, block, index)
+                                ))
+                            }
+
                         </div>
                     </div>
                 </div>
