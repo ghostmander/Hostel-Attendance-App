@@ -14,63 +14,55 @@ interface ReportGraphProps {
 const DownloadButton = (format: string, data: TurnstileData, date: string, block: string, index: number) => {
     // Handle click event
     const handleClick = async () => {
-      // Create request body
-      const requestBody = {
-        // Add your parameters here
-        format: format,
-        data: data,
-        date: date,
-        block: block
+        // Create request body
+        const requestBody = {
+            // Add your parameters here
+            format: format,
+            data: data,
+            date: date,
+            block: block
 
-      };
-      console.log(format + " " + date + " " + block);
-      try {
-        // Send POST request
-        const response = await fetch('/api/download', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestBody),
-        });
-  
-        // Check if request was successful
-        if (response.ok) {
-            const response = await fetch('/api/download');
-            
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
+        };
+        console.log(format + " " + date + " " + block);
+        try {
+            // Send POST request
+            const response = await fetch('/api/download', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody),
+            });
 
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            
-            // the filename you want
-            a.download = `Report_${block}_${date}.${format === "Excel" ? "xlsx" : "pdf"}`;
-            
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            console.log('Your file has downloaded!');
+            // Check if request was successful
+            if (response.ok) {
+                console.log(response.body);
+                response.json().then(data => {
+                    console.log(data.filepath);
+                    const link = document.createElement('a');
+                    link.href = data.filepath;
+                    link.download = data.filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                })
 
-
-
-        } else {
-          // Handle error
-          console.error('Error:', response.status);
+            } else {
+                // Handle error
+                console.error('Error:', response.status);
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
-      } catch (error) {
-        console.error('Error:', error);
-      }
     };
     // Render download button
     return (
-      <button onClick={handleClick} key={index} >
-        {format}
-      </button>
+        <div className="stack" onClick={handleClick} key={index}>
+            {format}
+        </div>
     );
 };
-  
+
 
 export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
     // @ts-ignore
@@ -90,6 +82,29 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
             setData(data.data)
         })
     })
+
+
+    const filterData = ( rawData: TurnstileData ) => {
+        let data: TurnstileData | undefined;
+        // Filter out the data based on the filters
+        if (rawData) {
+            for (const [key, value] of Object.entries(rawData)) {
+                if (name && !value.name.includes(name.toUpperCase())) continue;
+                if (regno && !key.includes(regno.toUpperCase())) continue;
+                if (!showNE) {
+                    if (status && !(value.status === status.toUpperCase())) continue;
+                    else if (value.status.startsWith("NE_")) continue
+                } else {
+                    if (status && !(value.status.endsWith(status.toUpperCase()))) continue;
+                }
+                if (data === undefined) data = {};
+                data[key] = value;
+            }
+        }
+        return data || {};
+    }
+
+
     const scrollableBtns = {
         "Overall": "",
         "BH Block 1": "BHB1",
@@ -133,7 +148,7 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
 
                             {
                                 formats.map((format, index) => (
-                                    DownloadButton(format, data || {}, date, block, index)
+                                    DownloadButton(format, filterData(data || {}), date, block, index)
                                 ))
                             }
 
@@ -171,7 +186,7 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
                             labels: {font: {size: 19}}
                         }
                     }
-                }}/>
+                }} />
                 <div id={"counts"}>
                     {
                         ['All', 'Present', 'Absent', 'Leave', 'Leave_Reported'].map((v, idx) =>
@@ -193,8 +208,7 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
                                onChange={() => setShowNE(!showNE)}/>
                     </label>
                 </div>
-                <DataViewer date={date} rawData={data || {}}
-                            filters={{name: name, regno: regno, status: status, showNE: showNE}}/>
+                <DataViewer date={date} data={filterData(data || {})}/>
             </div>
         </div>
     )

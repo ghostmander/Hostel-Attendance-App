@@ -1,10 +1,11 @@
 - [x] `UNKOWN` status - In masterdata not in Turnstile
 - [x] COUNT
 - [x] Improvised Report Page
-- [ ] Download buttons
-- [ ] Admin Panel
 - [x] Instructions on Home Page
 - [x] Remove Unknown (Absent ig)
 - [x] Add block data to table
 - [x] Add last seen to table
 - [x] Increase size of pi chart
+- [x] Download buttons
+- [ ] Admin Panel
+- [ ] Delete reports after download?? [Public/reports folder just gets bigger and bigger]

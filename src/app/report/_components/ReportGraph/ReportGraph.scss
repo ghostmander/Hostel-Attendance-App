@@ -103,7 +103,8 @@ body {
 }
 
 #graph {
-  height: 60vh;
+  min-height: 60vh !important;
+  max-height: 60vh !important;
   display: flex;
   justify-content: space-evenly;
   margin: 5em;

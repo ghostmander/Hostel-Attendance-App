@@ -1,8 +1,8 @@
-import { Workbook } from "exceljs";
+import {Workbook} from "exceljs";
 import puppeteer from "puppeteer";
 
-export const generatePDF = async(data: PersonData[], date: string, block: string) => {
-    
+export const generatePDF = async (data: PersonData[], date: string, block: string) => {
+
     // @ts-ignore
     const total = Object.keys(data).length;
     // @ts-ignore
@@ -17,19 +17,19 @@ export const generatePDF = async(data: PersonData[], date: string, block: string
     htmlString += `<p>Total: ${total}</p>`;
     htmlString += `<p>Present: ${present}</p>`;
     htmlString += `<p>Absent: ${absent}</p>`;
-    htmlString += `<table><thead><tr><th>ID</th><th>Name</th><th>Status</th><th>Last Seen</th></tr></thead><tbody>`;
+    htmlString += `<table><thead><tr><th>ID</th><th>Name</th><th>Last Seen</th><th>Status</th></tr></thead><tbody>`;
 
     // @ts-ignore
     for (const [key, value] of Object.entries(data)) {
         // @ts-ignore
-        htmlString += `<tr><td>${key}</td><td>${value.name}</td><td>${value.status}</td><td>${value.time ? date: new Date((new Date(date)) - (3600000*24)).toISOString().split('T')[0]} ${value.time}</td></tr>`
+        htmlString += `<tr><td>${key}</td><td>${value.name}</td><td>${value.time ? date : new Date((new Date(date)) - (3600000 * 24)).toISOString().split('T')[0]} ${value.time}</td><td>${value.status}</td></tr>`
     }
 
     htmlString += `</tbody></table>`;
 
     const html = `
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
     <head>
     <style>
     table, th, td {
@@ -37,6 +37,7 @@ export const generatePDF = async(data: PersonData[], date: string, block: string
         border-collapse: collapse;
         }
     </style>
+    <title>PDF File</title>
     </head>
     <body>
     ${htmlString}
@@ -48,7 +49,8 @@ export const generatePDF = async(data: PersonData[], date: string, block: string
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         await page.setContent(html);
-        await page.pdf({ path: `reports/${filename}.pdf`, format: 'A4' });
+        // await page.pdf({ path: `public/reports/${filename}.pdf`, format: 'A4' });
+        await page.pdf({path: `public/reports/${filename}.pdf`, format: 'A4'});
         await browser.close();
     })();
 
@@ -57,7 +59,7 @@ export const generatePDF = async(data: PersonData[], date: string, block: string
 };
 
 //@ts-ignore
-export const generateExcel = async(data, date, block) => {
+export const generateExcel = async (data, date, block) => {
     const total = Object.keys(data).length;
     // @ts-ignore
     const present = Object.values(data).filter((value) => value.status === "PRESENT").length;
@@ -73,24 +75,23 @@ export const generateExcel = async(data, date, block) => {
     worksheet.addRow(["Absent", absent]);
 
     // Add data
-    worksheet.addRow(["ID", "Name", "Status", "LastSeen"]);
+    worksheet.addRow(["ID", "Name", "LastSeen", "Status"]);
     // @ts-ignore
     for (const [key, value] of Object.entries(data)) {
         // @ts-ignore
-        worksheet.addRow([key, value.name, value.status, `${value.time ? date: new Date((new Date(date)) - (3600000*24)).toISOString().split('T')[0]} ${value.time}`]);
+        worksheet.addRow([key, value.name, `${value.time ? date : new Date((new Date(date)) - (3600000 * 24)).toISOString().split('T')[0]} ${value.time}`, value.status]);
     }
     let filename = `Report_${block}_${date}.xlsx`;
 
     // create and return the excel file
-    await workbook.xlsx.writeFile(`reports/${filename}`)
+    await workbook.xlsx.writeFile(`public/reports/${filename}`)
         .then(() => {
             console.log("File saved!");
         })
         .catch((err) => {
-            console.log(err);
-        }
-    );
-
+                console.log(err);
+            }
+        );
 
     return filename;
 
