@@ -11,6 +11,7 @@ export async function GET(req: Request){
         // Delete file
 
 
+        return new NextResponse("Forbidden", {status: 403});
 
     } catch (error) {
         console.error(error);
