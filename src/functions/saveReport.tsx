@@ -22,7 +22,7 @@ export const generatePDF = async (data: PersonData[], date: string, block: strin
     // @ts-ignore
     for (const [key, value] of Object.entries(data)) {
         // @ts-ignore
-        htmlString += `<tr><td>${key}</td><td>${value.name}</td><td>${value.time ? date : new Date((new Date(date)) - (3600000 * 24)).toISOString().split('T')[0]} ${value.time}</td><td>${value.status}</td></tr>`
+        htmlString += `<tr><td>${key}</td><td>${value.name}</td><td>${new Date((new Date(date)) - (3600000 * 24)).toISOString().split('T')[0]}</td><td>${value.status}</td></tr>`
     }
 
     htmlString += `</tbody></table>`;

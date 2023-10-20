@@ -36,7 +36,7 @@ export const DataViewer: React.FC<DataViewerProps> = ({date, data}) => {
                                         <td>{key}</td>
                                         <td>{value.name}</td>
                                         {/*@ts-ignore*/}
-                                        <td>{`${value.time ? date: new Date((new Date(date)) - (3600000*24)).toISOString().split('T')[0]} ${value.time}`}</td>
+                                        <td>{`${new Date((new Date(date)) - (3600000*24)).toISOString().split('T')[0]}`}</td>
                                         <td>{value.blVal}</td>
                                         <td className={
                                             value.status.replace("NE_", "").toLowerCase()

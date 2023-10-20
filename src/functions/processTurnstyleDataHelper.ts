@@ -26,21 +26,19 @@ const processTurnstyleDataHelper = async (file: File): Promise<[string, Turnstil
         // Loop through the rows and extract the data.
         for (let i = 8; i <= worksheet.rowCount; i++) {
             const row: Row = worksheet.getRow(i);
-            const regNo: string = getUpperCell(row, 2);
+            const regNo: string = getUpperCell(row, 1);
             if (seenRegNos.has(regNo)) continue;
-            const name: string = getUpperCell(row, 1).replace(nameExtractor, "$<Name>");
-            const time: string = getUpperCell(row, 6);
-            const block: string = getUpperCell(row, 8).split("/")[1]
+            const name: string = getUpperCell(row, 2).replace(nameExtractor, "$<Name>");
+            const block: string = getUpperCell(row, 5).split("/")[1]
             let blVal: "BHB1" | "BHB2" | "BHB3" | "GHB1" | "" = "";
             if (block === "BLOCK 1") blVal = "BHB1"
             else if (block === "BLOCK 2") blVal = "BHB2"
             else if (block === "BLOCK 3") blVal = "BHB3"
             else if (block === "GHBLOCK 1") blVal = "GHB1"
-            const checkpoint: string = getUpperCell(row, 10);
-            const isEntry: boolean = /ENTRY/.test(checkpoint);
-            const status: string = isEntry ? "PRESENT" : "ABSENT";
+            const status: string = (getUpperCell(row, 18) === "A") ? "ABSENT" : "PRESENT";
+            const isEntry: boolean = status === "PRESENT";
             seenRegNos.add(regNo);
-            data[regNo] = {name, time, blVal, isEntry, isNewEntry: false, isOnLeave: false, status};
+            data[regNo] = {name, blVal, isEntry, isNewEntry: false, isOnLeave: false, status};
         }
         return [date, data];
     });

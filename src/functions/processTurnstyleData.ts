@@ -42,7 +42,6 @@ const processTurnstyleData = async (file: File) => {
             turnstileDatabase[regNo] = {
                 blVal: bl,
                 name: masterDatabase[regNo].name,
-                time: "",
                 isNewEntry: false,
                 isEntry: false,
                 isOnLeave: leaveDatabase.has(regNo),
