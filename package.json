@@ -10,11 +10,13 @@
     "lint": "next lint",
     "docker:build": "docker build -t hostel-attendance-app .",
     "docker:clean": "docker rm -f hostel-attendance-app || true",
-    "docker:run": "docker run -p 7878:3000 -v $pwd/reports:/usr/src/app/public/reports -d --name hostel-attendance-app hostel-attendance-app && npm run docker:logs",
+    "docker:run-windows": "docker run -p 7878:3000 -v %CD%/public/reports:/usr/src/app/public/reports -v %CD%/database:/usr/src/app/database -v %CD%/logs:/usr/src/app/logs -d --name hostel-attendance-app hostel-attendance-app && npm run docker:logs",
+    "docker:run-linux": "docker run -p 7878:3000 -v $pwd/public/reports:/usr/src/app/public/reports -v $pwd/database:/usr/src/app/database -v $pwd/logs:/usr/src/app/logs -d --name hostel-attendance-app hostel-attendance-app && npm run docker:logs",
     "docker:stop": "docker stop hostel-attendance-app",
     "docker:start": "docker start hostel-attendance-app && npm run docker:logs",
     "docker:logs": "docker logs -f hostel-attendance-app",
-    "deploy": "npm run docker:build && npm run docker:clean && npm run docker:run"
+    "deploy-windows": "npm run docker:build && npm run docker:clean && npm run docker:run-windows",
+    "deploy-linux": "npm run docker:build && npm run docker:clean && npm run docker:run-linux"
   },
   "keywords": [],
   "author": "",
