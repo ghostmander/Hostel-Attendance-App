@@ -46,7 +46,12 @@ export const generatePDF = async (data: PersonData[], date: string, block: strin
     `;
 
     await (async () => {
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox'
+            ]
+        });
         const page = await browser.newPage();
         await page.setContent(html);
         // await page.pdf({ path: `public/reports/${filename}.pdf`, format: 'A4' });
