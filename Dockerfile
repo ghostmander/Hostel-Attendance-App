@@ -13,9 +13,12 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app
+RUN npm install -g npm@10.2.1
+RUN npm install puppeteer
 RUN npm install
 
 COPY . /usr/src/app
+# RUN mkdir -p /usr/src/app/public/reports
 # RUN npm run build
 
 EXPOSE 3000

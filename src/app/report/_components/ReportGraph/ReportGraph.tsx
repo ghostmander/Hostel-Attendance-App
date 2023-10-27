@@ -71,7 +71,6 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
     const [date, setDate] = useState("2023-07-21");
     const [block, setBlock] = useState("");
     const [status, setStatus] = useState("");
-    const [showNE, setShowNE] = useState(true);
     const [name, setName] = useState("");
     const [regno, setRegno] = useState("");
     fetch('/api/getData', {
@@ -91,12 +90,7 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
             for (const [key, value] of Object.entries(rawData)) {
                 if (name && !value.name.includes(name.toUpperCase())) continue;
                 if (regno && !key.includes(regno.toUpperCase())) continue;
-                if (!showNE) {
-                    if (status && !(value.status === status.toUpperCase())) continue;
-                    else if (value.status.startsWith("NE_")) continue
-                } else {
-                    if (status && !(value.status.endsWith(status.toUpperCase()))) continue;
-                }
+                if (status && !(value.status.endsWith(status.toUpperCase()))) continue;
                 if (data === undefined) data = {};
                 data[key] = value;
             }
@@ -202,11 +196,6 @@ export const ReportGraph: React.FC<ReportGraphProps> = ({}) => {
                            onChange={e => setName(e.target.value)}/>
                     <input type="text" name="regno" id="filter-regno" placeholder="Registration Number"
                            defaultValue={regno} onChange={e => setRegno(e.target.value)}/>
-                    <label>
-                        Show New Entries
-                        <input type="checkbox" name="showNE" id="filterNE" defaultChecked={showNE}
-                               onChange={() => setShowNE(!showNE)}/>
-                    </label>
                 </div>
                 <DataViewer date={date} data={filterData(data || {})}/>
             </div>

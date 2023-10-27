@@ -47,6 +47,7 @@ export const generatePDF = async (data: PersonData[], date: string, block: strin
 
     await (async () => {
         const browser = await puppeteer.launch({
+            headless: true,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox'

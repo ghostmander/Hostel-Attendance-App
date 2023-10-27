@@ -2,6 +2,7 @@
 import React from "react";
 import FilesDragAndDrop from '@yelysei/react-files-drag-and-drop';
 import axios from "axios";
+import { useRef } from "react";
 import "./UploadFiles.scss";
 
 interface UploadFilesProps {
@@ -13,6 +14,7 @@ export const UploadFiles: React.FC<UploadFilesProps> = ({isHostelDataUploaded, i
     const [lveFiles, setLveFiles] = React.useState<File[] | null>(null);
     const [mstFiles, setMstFiles] = React.useState<File[] | null>(null);
     const [tstFiles, setTstFiles] = React.useState<File[] | null>(null);
+    const paragraphRef = useRef<HTMLParagraphElement>(null);
 
     const st: React.CSSProperties = {
         backgroundColor: 'var(--secondary-color)',
@@ -85,7 +87,7 @@ export const UploadFiles: React.FC<UploadFilesProps> = ({isHostelDataUploaded, i
             <form onSubmit={handleSubmit}>
                 <div id="file-uploaders">
                     <div id="left">
-                        {isHostelDataUploaded && <p>Hostel Data already uploaded!</p>}
+                        {isHostelDataUploaded && <p ref={paragraphRef}>Hostel Data already uploaded!</p>}
                         <FilesDragAndDrop onUpload={setMstFiles} formats={fmt} containerStyles={st} openDialogOnClick>
                             <div style={divStyles}>
                                 <span>Upload Hostel Data</span>
@@ -126,6 +128,7 @@ export const UploadFiles: React.FC<UploadFilesProps> = ({isHostelDataUploaded, i
                     id={"reset-data"}
                     onClick={() => {
                         confirm("Are you sure you want to reset all data?") && axios.post('/api/reset').then(() => {
+                            paragraphRef.current?.remove();
                             alert("Data reset successfully!")
                         }).catch((error) => {
                             console.log(error);

@@ -29,8 +29,6 @@ export const DataViewer: React.FC<DataViewerProps> = ({date, data}) => {
                             </tr> :
                             Object.entries(data).map(([key, value]: [string, PersonData], index) => {
                                 let status = value.status;
-                                if (value.status === "UNKNOWN") status = "ABSENT"
-                                // @ts-ignore
                                 return (
                                     <tr key={index}>
                                         <td>{key}</td>
@@ -39,7 +37,7 @@ export const DataViewer: React.FC<DataViewerProps> = ({date, data}) => {
                                         <td>{`${new Date((new Date(date)) - (3600000*24)).toISOString().split('T')[0]}`}</td>
                                         <td>{value.blVal}</td>
                                         <td className={
-                                            value.status.replace("NE_", "").toLowerCase()
+                                            value.status.toLowerCase()
                                         }>{status}</td>
                                     </tr>
                                 )

@@ -34,7 +34,7 @@ const processTurnstyleDataHelper = async (file: File): Promise<[string, Turnstil
             if (block === "BLOCK 1") blVal = "BHB1"
             else if (block === "BLOCK 2") blVal = "BHB2"
             else if (block === "BLOCK 3") blVal = "BHB3"
-            else if (block === "GHBLOCK 1") blVal = "GHB1"
+            else if (block === "GHBLOCK1") blVal = "GHB1"
             const status: string = (getUpperCell(row, 18) === "A") ? "ABSENT" : "PRESENT";
             const isEntry: boolean = status === "PRESENT";
             seenRegNos.add(regNo);
